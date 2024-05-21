@@ -65,10 +65,38 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/criar-conta', async (req, res) => {
-    const { login, senha } = req.body;
+    const {
+        nome,
+        sexo,
+        dataNascimento,
+        email,
+        cpf,
+        telefoneCelular,
+        login,
+        senha,
+        endereco,
+        bairro,
+        cidadeUF,
+        cep,
+        pais
+    } = req.body;
 
     try {
-        const token = await criarConta(login, senha);
+        const token = await criarConta(
+            nome,
+            sexo,
+            dataNascimento,
+            email,
+            cpf,
+            telefoneCelular,
+            login,
+            senha,
+            endereco,
+            bairro,
+            cidadeUF,
+            cep,
+            pais
+        );
         res.status(201).json({ token });
     } catch (error) {
         console.error("Erro ao criar conta:", error);
