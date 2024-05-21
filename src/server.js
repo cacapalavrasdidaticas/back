@@ -13,7 +13,9 @@ app.use(cors());
 app.use(express.json());
 app.use(validateApiKey);
 
-const upload = multer({ dest: 'uploads/' });
+// Configuração do multer para armazenamento em memória
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 app.get('/', (req, res) => {
     res.send('Funcionou sapohha');
