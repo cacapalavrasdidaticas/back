@@ -5,6 +5,10 @@ import jwt from "jsonwebtoken";
 const JWT_SECRET = 'seu_segredo_secreto'; // Chave secreta para assinar o token JWT
 
 export async function criarConta(nome, sexo, dataNascimento, email, cpf, telefoneCelular, login, senha, endereco, bairro, cidadeUF, cep, pais) {
+    if (!senha) {
+        throw new Error("Senha é obrigatória");
+    }
+    
     try {
         // Verificar se o login já está em uso
         const existingUser = await db.oneOrNone("SELECT * FROM login WHERE login = $1", [login]);
