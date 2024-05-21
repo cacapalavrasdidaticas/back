@@ -65,46 +65,11 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/criar-conta', async (req, res) => {
-    const {
-        nome,
-        sexo,
-        dataNascimento,
-        email,
-        cpf,
-        telefoneCelular,
-        login,
-        senha,
-        endereco: { endereco, bairro, cidadeUF, cep, pais } = {} // Desestruturando o objeto endereço e fornecendo um valor padrão vazio
-    } = req.body;
+    console.log("Recebido no endpoint /criar-conta:", req.body);
 
-    // Verificação básica para garantir que os campos obrigatórios estão presentes
-    // if (!login || !senha || !nome || !sexo || !dataNascimento || !email || !cpf || !telefoneCelular) {
-    //     return res.status(400).json({ error: "Todos os campos obrigatórios devem ser preenchidos." });
-    // }
+    await criarConta(req.body);
 
-    try {
-        console.log("Recebido no endpoint /criar-conta:", req.body);
-
-        const token = await criarConta({
-            nome,
-            sexo,
-            dataNascimento,
-            email,
-            cpf,
-            telefoneCelular,
-            // login,
-            senha,
-            endereco,
-            bairro,
-            cidadeUF,
-            cep,
-            pais
-        });
-        res.status(201).json({ token });
-    } catch (error) {
-        console.error("Erro ao criar conta:", error);
-        res.status(400).json({ error: error.message });
-    }
+    res.status(201).json({ message: "Conta criada com sucesso" });
 });
 
 // Adaptando para que a porta seja configurada corretamente na Vercel
