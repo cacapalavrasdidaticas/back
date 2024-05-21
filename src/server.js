@@ -65,26 +65,18 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/criar-conta', async (req, res) => {
-  try {
-    const { nome, sexo, dataNascimento, email, cpf, telefoneCelular, endereco } = req.body;
-    const conta = await Conta.create({
-      nome,
-      sexo,
-      dataNascimento,
-      email,
-      cpf,
-      telefoneCelular,
-      endereco: endereco.endereco,
-      bairro: endereco.bairro,
-      cidadeUF: endereco.cidadeUF,
-      cep: endereco.cep,
-      pais: endereco.pais,
-    });
-    res.status(201).json(conta);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+    const usuario = req.body;
+
+    try {
+        const { id } = await criarConta(usuario);
+
+        res.status(201).json({ message: "Conta criada com sucesso", id });
+    } catch (error) {
+        console.error("Erro ao criar conta:", error);
+        res.status(500).json({ error: "Erro ao criar conta" });
+    }
 });
+
 
 
 // Adaptando para que a porta seja configurada corretamente na Vercel
