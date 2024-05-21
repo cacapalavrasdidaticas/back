@@ -6,7 +6,7 @@ import validateApiKey from './middleware.js';
 import { obterPDF } from './modules/pdf/getPdf.js';
 import { createPdf } from './modules/pdf/postPdf.js';
 import { loginUsuario } from './modules/login/login.js';
-import { criarConta } from './modules/contas/createLogin.js';
+import { criarConta } from './modules/login/createLogin.js';
 
 const app = express();
 app.use(cors());
