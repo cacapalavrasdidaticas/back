@@ -65,55 +65,25 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/criar-conta', async (req, res) => {
-    const {
-        email,
-        senha,
-        nome = '',
-        sexo = '',
-        dataNascimento = '',
-        cpf = '',
-        telefoneCelular = '',
-        login = '',
-        endereco = '',
-        bairro = '',
-        cidadeUF = '',
-        cep = '',
-        pais = ''
-    } = req.body;
-
-    if (!email || !senha) {
-        return res.status(400).json({ error: "Email e senha são obrigatórios." });
-    }
-
-    const dados = {
-        email,
-        senha,
-        nome,
-        sexo,
-        dataNascimento,
-        cpf,
-        telefoneCelular,
-        login,
-        endereco,
-        bairro,
-        cidadeUF,
-        cep,
-        pais
-    };
-
-    console.log("Recebido no endpoint /criar-conta:", dados);
-
-    try {
-        await criarConta(dados);
-        res.status(201).json({ message: "Conta criada com sucesso" });
-    } catch (error) {
-        if (error.message === "O login já está em uso.") {
-            res.status(409).json({ error: error.message });
-        } else {
-            console.error("Erro ao criar conta:", error);
-            res.status(500).json({ error: "Erro interno do servidor" });
-        }
-    }
+  try {
+    const { nome, sexo, dataNascimento, email, cpf, telefoneCelular, endereco } = req.body;
+    const conta = await Conta.create({
+      nome,
+      sexo,
+      dataNascimento,
+      email,
+      cpf,
+      telefoneCelular,
+      endereco: endereco.endereco,
+      bairro: endereco.bairro,
+      cidadeUF: endereco.cidadeUF,
+      cep: endereco.cep,
+      pais: endereco.pais,
+    });
+    res.status(201).json(conta);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 });
 
 
