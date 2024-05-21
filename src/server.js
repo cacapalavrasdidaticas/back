@@ -72,21 +72,19 @@ app.post('/criar-conta', async (req, res) => {
         email,
         cpf,
         telefoneCelular,
-        // login,
+        login,
         senha,
-        endereco,
-        bairro,
-        cidadeUF,
-        cep,
-        pais
+        endereco: { endereco, bairro, cidadeUF, cep, pais } = {} // Desestruturando o objeto endereço e fornecendo um valor padrão vazio
     } = req.body;
 
     // Verificação básica para garantir que os campos obrigatórios estão presentes
-    if (!senha || !nome || !sexo || !dataNascimento || !email || !cpf || !telefoneCelular) {
+    if (!login || !senha || !nome || !sexo || !dataNascimento || !email || !cpf || !telefoneCelular) {
         return res.status(400).json({ error: "Todos os campos obrigatórios devem ser preenchidos." });
     }
 
     try {
+        console.log("Recebido no endpoint /criar-conta:", req.body);
+
         const token = await criarConta(
             nome,
             sexo,
@@ -94,7 +92,7 @@ app.post('/criar-conta', async (req, res) => {
             email,
             cpf,
             telefoneCelular,
-            // login,
+            login,
             senha,
             endereco,
             bairro,
