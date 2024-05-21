@@ -40,3 +40,4 @@ export async function criarConta({ nome, sexo, dataNascimento, email, cpf, telef
         throw error;
     }
 }
+
