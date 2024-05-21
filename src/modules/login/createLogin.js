@@ -4,17 +4,17 @@ import jwt from "jsonwebtoken";
 
 const JWT_SECRET = 'seu_segredo_secreto'; // Chave secreta para assinar o token JWT
 
-export async function criarConta(nome, sexo, dataNascimento, email, cpf, telefoneCelular, login, senha, endereco, bairro, cidadeUF, cep, pais) {
-    if (!senha) {
-        throw new Error("Senha é obrigatória");
+export async function criarConta(nome, sexo, dataNascimento, email, cpf, telefoneCelular, senha, endereco, bairro, cidadeUF, cep, pais) {
+    if (typeof senha !== 'string' || senha.trim() === '') {
+        throw new Error("Senha é obrigatória e deve ser uma string válida");
     }
     
     try {
         // Verificar se o login já está em uso
-        const existingUser = await db.oneOrNone("SELECT * FROM login WHERE login = $1", [login]);
-        if (existingUser) {
-            throw new Error("O login já está em uso.");
-        }
+        // const existingUser = await db.oneOrNone("SELECT * FROM login WHERE nome = $1", [login]);
+        // if (existingUser) {
+        //     throw new Error("O login já está em uso.");
+        // }
 
         // Verificar se o CPF já está em uso
         const existingCPF = await db.oneOrNone("SELECT * FROM contas WHERE cpf = $1", [cpf]);
@@ -34,7 +34,7 @@ export async function criarConta(nome, sexo, dataNascimento, email, cpf, telefon
         // Iniciar uma transação para garantir a consistência dos dados
         await db.tx(async t => {
             // Inserir os dados do novo usuário na tabela de login
-            await t.none("INSERT INTO login (login, senha, cpf) VALUES ($1, $2, $3)", [login, hashedPassword, cpf]);
+            await t.none("INSERT INTO login (email, senha, cpf) VALUES ($1, $2, $3)", [email, hashedPassword, cpf]);
 
             // Inserir os dados na tabela de contas
             await t.none(
