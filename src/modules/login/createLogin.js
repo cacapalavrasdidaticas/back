@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken";
 const JWT_SECRET = 'seu_segredo_secreto'; // Chave secreta para assinar o token JWT
 
 export async function criarConta(nome, sexo, dataNascimento, email, cpf, telefoneCelular, login, senha, endereco, bairro, cidadeUF, cep, pais) {
+    console.log("Recebido em criarConta:", { nome, sexo, dataNascimento, email, cpf, telefoneCelular, login, senha, endereco, bairro, cidadeUF, cep, pais });
+
     if (typeof senha !== 'string' || senha.trim() === '') {
         throw new Error("Senha é obrigatória e deve ser uma string válida");
     }
