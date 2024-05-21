@@ -7,10 +7,10 @@ const JWT_SECRET = 'seu_segredo_secreto'; // Chave secreta para assinar o token 
 export async function criarConta({ nome, sexo, dataNascimento, email, cpf, telefoneCelular, endereco }) {
     console.log("Recebido em criarConta:", { nome, sexo, dataNascimento, email, cpf, telefoneCelular, endereco });
 
-    // Verificar se todos os campos obrigatórios estão preenchidos
-    if (!nome || !sexo || !dataNascimento || !email || !cpf || !telefoneCelular || !endereco) {
-        throw new Error("Todos os campos obrigatórios devem ser preenchidos.");
-    }
+    // // Verificar se todos os campos obrigatórios estão preenchidos
+    // if (!nome || !sexo || !dataNascimento || !email || !cpf || !telefoneCelular || !endereco) {
+    //     throw new Error("Todos os campos obrigatórios devem ser preenchidos.");
+    // }
 
     try {
         // Verificar se o login já está em uso
