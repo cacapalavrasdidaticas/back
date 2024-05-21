@@ -72,7 +72,7 @@ app.post('/criar-conta', async (req, res) => {
         email,
         cpf,
         telefoneCelular,
-        login,
+        // login,
         senha,
         endereco,
         bairro,
@@ -82,7 +82,7 @@ app.post('/criar-conta', async (req, res) => {
     } = req.body;
 
     // Verificação básica para garantir que os campos obrigatórios estão presentes
-    if (!login || !senha || !nome || !sexo || !dataNascimento || !email || !cpf || !telefoneCelular) {
+    if (!senha || !nome || !sexo || !dataNascimento || !email || !cpf || !telefoneCelular) {
         return res.status(400).json({ error: "Todos os campos obrigatórios devem ser preenchidos." });
     }
 
