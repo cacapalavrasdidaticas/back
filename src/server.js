@@ -103,10 +103,19 @@ app.post('/criar-conta', async (req, res) => {
 
     console.log("Recebido no endpoint /criar-conta:", dados);
 
-    await criarConta(dados);
-
-    res.status(201).json({ message: "Conta criada com sucesso" });
+    try {
+        await criarConta(dados);
+        res.status(201).json({ message: "Conta criada com sucesso" });
+    } catch (error) {
+        if (error.message === "O login já está em uso.") {
+            res.status(409).json({ error: error.message });
+        } else {
+            console.error("Erro ao criar conta:", error);
+            res.status(500).json({ error: "Erro interno do servidor" });
+        }
+    }
 });
+
 
 // Adaptando para que a porta seja configurada corretamente na Vercel
 const port = process.env.PORT || 5000;
