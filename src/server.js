@@ -8,6 +8,7 @@ import { createPdf } from './modules/pdf/postPdf.js';
 import { loginUsuario } from './modules/login/login.js';
 import { criarConta } from './modules/login/createLogin.js';
 import { associatePdf } from './modules/pdf/postPdfDescription.js';
+import { getPdfs } from './modules/pdf/getAllPdf.js';
 
 const app = express();
 app.use(cors());
@@ -40,6 +41,16 @@ app.get('/pdf/:id', async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({ error: "Erro ao buscar o PDF" });
+    }
+});
+
+app.get('/pdfs', async (req, res) => {
+    try {
+        const pdfs = await obterTodosPDFs();
+        res.status(200).json(pdfs);
+    } catch (error) {
+        console.error("Erro ao buscar todos os PDFs:", error);
+        res.status(500).json({ error: "Erro ao buscar todos os PDFs" });
     }
 });
 
