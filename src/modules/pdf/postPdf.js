@@ -1,5 +1,6 @@
 import db from "../../db.js";
 import fs from "fs";
+import path from "path";
 
 export async function createPdf(req, res) {
   try {
@@ -11,6 +12,8 @@ export async function createPdf(req, res) {
     for (const file of req.files) {
       const nomeArquivo = file.originalname;
       const caminhoArquivo = file.path;
+
+      console.log(`Processando arquivo: ${nomeArquivo} em ${caminhoArquivo}`);
 
       const pdfData = fs.readFileSync(caminhoArquivo);
 
