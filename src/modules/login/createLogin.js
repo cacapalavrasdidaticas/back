@@ -7,19 +7,19 @@ const JWT_SECRET = 'seu_segredo_secreto'; // Chave secreta para assinar o token 
 export async function criarConta(nome, sexo, dataNascimento, email, cpf, telefoneCelular, login, senha, endereco, bairro, cidadeUF, cep, pais) {
     try {
         // Verificar se o login já está em uso
-        const existingUser = await db.oneOrNone("SELECT * FROM login WHERE login = $1", login);
+        const existingUser = await db.oneOrNone("SELECT * FROM login WHERE login = $1", [login]);
         if (existingUser) {
             throw new Error("O login já está em uso.");
         }
 
         // Verificar se o CPF já está em uso
-        const existingCPF = await db.oneOrNone("SELECT * FROM contas WHERE cpf = $1", cpf);
+        const existingCPF = await db.oneOrNone("SELECT * FROM contas WHERE cpf = $1", [cpf]);
         if (existingCPF) {
             throw new Error("O CPF já está em uso.");
         }
 
         // Verificar se o email já está em uso
-        const existingEmail = await db.oneOrNone("SELECT * FROM contas WHERE email = $1", email);
+        const existingEmail = await db.oneOrNone("SELECT * FROM contas WHERE email = $1", [email]);
         if (existingEmail) {
             throw new Error("O email já está em uso.");
         }
