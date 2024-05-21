@@ -65,9 +65,45 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/criar-conta', async (req, res) => {
-    console.log("Recebido no endpoint /criar-conta:", req.body);
+    const {
+        email,
+        senha,
+        nome = '',
+        sexo = '',
+        dataNascimento = '',
+        cpf = '',
+        telefoneCelular = '',
+        login = '',
+        endereco = '',
+        bairro = '',
+        cidadeUF = '',
+        cep = '',
+        pais = ''
+    } = req.body;
 
-    await criarConta(req.body);
+    if (!email || !senha) {
+        return res.status(400).json({ error: "Email e senha são obrigatórios." });
+    }
+
+    const dados = {
+        email,
+        senha,
+        nome,
+        sexo,
+        dataNascimento,
+        cpf,
+        telefoneCelular,
+        login,
+        endereco,
+        bairro,
+        cidadeUF,
+        cep,
+        pais
+    };
+
+    console.log("Recebido no endpoint /criar-conta:", dados);
+
+    await criarConta(dados);
 
     res.status(201).json({ message: "Conta criada com sucesso" });
 });
