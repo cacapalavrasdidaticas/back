@@ -8,11 +8,19 @@ export async function criarConta(dados) {
     const { email, senha, nome, sexo, dataNascimento, cpf, telefoneCelular, login, endereco, bairro, cidadeUF, cep, pais } = dados;
     console.log("Recebido em criarConta:", dados);
 
+    const userLogin = login || email;
+
+    // Verificar se o login já existe
+    const existingUser = await db.oneOrNone("SELECT * FROM login WHERE login = $1", [userLogin]);
+    if (existingUser) {
+        throw new Error("O login já está em uso.");
+    }
+
     // Criptografar a senha antes de armazená-la no banco de dados
     const hashedPassword = await bcrypt.hash(senha, 10);
 
     // Inserir os dados do novo usuário na tabela de login
-    await db.none("INSERT INTO login (login, senha, cpf) VALUES ($1, $2, $3)", [login || email, hashedPassword, cpf]);
+    await db.none("INSERT INTO login (login, senha, cpf) VALUES ($1, $2, $3)", [userLogin, hashedPassword, cpf]);
 
     // Inserir os dados na tabela de contas
     await db.none(
