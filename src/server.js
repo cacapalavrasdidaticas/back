@@ -94,7 +94,7 @@ app.post('/criar-conta', async (req, res) => {
             email,
             cpf,
             telefoneCelular,
-            login,
+            // login,
             senha,
             endereco,
             bairro,
