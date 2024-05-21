@@ -81,6 +81,11 @@ app.post('/criar-conta', async (req, res) => {
         pais
     } = req.body;
 
+    // Verificação básica para garantir que os campos obrigatórios estão presentes
+    if (!login || !senha || !nome || !sexo || !dataNascimento || !email || !cpf || !telefoneCelular) {
+        return res.status(400).json({ error: "Todos os campos obrigatórios devem ser preenchidos." });
+    }
+
     try {
         const token = await criarConta(
             nome,
@@ -103,7 +108,6 @@ app.post('/criar-conta', async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 });
-
 // Adaptando para que a porta seja configurada corretamente na Vercel
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
