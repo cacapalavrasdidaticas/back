@@ -52,10 +52,10 @@ app.post('/adicionar-pdf', upload.array('files'), async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-    const { login, senha } = req.body;
+    const { email, senha } = req.body;
 
     try {
-        const { token } = await loginUsuario(login, senha);
+        const { token } = await loginUsuario(email, senha);
 
         res.status(200).json({ token });
     } catch (error) {
