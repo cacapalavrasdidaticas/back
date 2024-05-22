@@ -48,9 +48,16 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-app.use('/uploads', express.static(uploadDir)); // Servir arquivos estáticos da pasta uploads
+// Servir arquivos estáticos da pasta uploads
+app.use('/uploads', express.static(uploadDir));
 
-// app.use(validateApiKey);
+// Aplicar validação de chave API a todas as rotas, exceto as de arquivos estáticos
+app.use((req, res, next) => {
+  if (req.path.startsWith('/uploads')) {
+    return next();
+  }
+  return validateApiKey(req, res, next);
+});
 
 app.get('/', (req, res) => {
     res.send('Funcionou sapohha');
