@@ -18,10 +18,10 @@ const getPdfImageAssociations = async (req, res) => {
         images ON pdfs.id = images.pdf_id
     `);
     
-    if (result) {
+    if (result.length > 0) {
       res.json(result);
     } else {
-      res.status(500).json({ error: 'Erro ao buscar associações entre PDFs e imagens' });
+      res.status(404).json({ error: 'Nenhuma associação encontrada' });
     }
   } catch (error) {
     console.error('Erro ao buscar associações entre PDFs e imagens:', error);
