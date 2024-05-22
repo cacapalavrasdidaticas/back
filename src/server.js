@@ -9,6 +9,7 @@ import { createPdf } from './modules/pdf/postPdf.js';
 import { loginUsuario } from './modules/login/login.js';
 import { criarConta } from './modules/login/createLogin.js';
 import { associatePdf } from './modules/pdf/postPdfDescription.js';
+import { obterAssociacoes } from './modules/pdf/getAllAssociations.js';
 
 const app = express();
 
@@ -59,6 +60,16 @@ app.get('/pdfs', async (req, res) => {
     } catch (error) {
         console.error("Erro ao buscar todos os PDFs:", error);
         res.status(500).json({ error: "Erro ao buscar todos os PDFs" });
+    }
+});
+
+app.get('/associacoes', async (req, res) => {
+    try {
+        const associacoes = await obterAssociacoes();
+        res.status(200).json(associacoes);
+    } catch (error) {
+        console.error("Erro ao buscar todas as associações:", error);
+        res.status(500).json({ error: "Erro ao buscar todas as associações" });
     }
 });
 
