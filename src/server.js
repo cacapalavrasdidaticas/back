@@ -12,7 +12,7 @@ import { loginUsuario } from './modules/login/login.js';
 import { criarConta } from './modules/login/createLogin.js';
 import { associatePdf } from './modules/pdf/postPdfDescription.js';
 import { obterAssociacoes } from './modules/pdf/getAllAssociations.js';
-import { upload, uploadImage, getImage } from './modules/pdf/imageUpload.js';
+import { upload, uploadImage, getImage, getAllImages } from './modules/pdf/imageUpload.js';
 
 const app = express();
 
@@ -140,6 +140,7 @@ app.post('/associar-pdf', upload.array('fotos'), async (req, res) => {
 // Novas rotas para upload e recuperação de imagem
 app.post('/upload-image', upload.single('image'), uploadImage);
 app.get('/image/:id', getImage);
+app.get('/images', getAllImages);
 
 app.listen(5000, () => {
     console.log("API rodando na porta 5000");
