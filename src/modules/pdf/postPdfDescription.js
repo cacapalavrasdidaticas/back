@@ -19,7 +19,7 @@ export async function associatePdf(req, res) {
     await db.none("INSERT INTO pdf_descriptions (pdf_id, descricao, fotos) VALUES ($1, $2, $3)", [
       pdf_id,
       descricao,
-      fotos,
+      JSON.stringify(fotos) // Armazenar os caminhos das fotos como string JSON
     ]);
 
     res.status(200).json({ mensagem: "Associação de PDF, descrição e fotos realizada com sucesso" });
