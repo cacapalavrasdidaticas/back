@@ -14,7 +14,7 @@ const uploadImage = async (req, res) => {
   
   try {
     const result = await db.query('INSERT INTO images (image) VALUES ($1) RETURNING id', [file.buffer]);
-    console.log(result)
+    console.log(result.row, 'no primeiro try')
     res.json({ id: result.id });
   } catch (error) {
     console.error(error);
