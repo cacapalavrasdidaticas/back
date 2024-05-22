@@ -8,6 +8,10 @@ const upload = multer({ storage: storage });
 // Função para fazer upload da imagem
 const uploadImage = async (req, res) => {
   const file = req.file;
+  if (!file) {
+    return res.status(400).json({ error: 'Nenhum arquivo foi enviado' });
+  }
+  
   try {
     const result = await db.query('INSERT INTO images (image) VALUES ($1) RETURNING id', [file.buffer]);
     res.json({ id: result.rows[0].id });
@@ -35,6 +39,7 @@ const getImage = async (req, res) => {
   }
 };
 
+// Função para listar todas as imagens
 const getAllImages = async (req, res) => {
   try {
     const result = await db.query('SELECT id FROM images');
@@ -46,4 +51,3 @@ const getAllImages = async (req, res) => {
 };
 
 export { upload, uploadImage, getImage, getAllImages };
-
