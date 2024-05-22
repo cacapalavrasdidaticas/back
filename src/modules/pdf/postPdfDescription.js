@@ -1,10 +1,9 @@
 import db from "../../db.js";
-import path from "path";
 
 export async function associatePdf(req, res) {
   try {
     const { pdf_id, descricao } = req.body;
-    const fotos = req.files.map(file => `/uploads/${file.filename}`); // Armazenar paths das fotos
+    const fotos = req.files.map(file => `/uploads/${file.filename}`); // Armazenar caminhos relativos
 
     if (!pdf_id || !descricao) {
       return res.status(400).json({ error: "PDF ID e descrição são obrigatórios" });
