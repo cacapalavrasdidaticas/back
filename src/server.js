@@ -87,14 +87,17 @@ app.get('/pdfs', async (req, res) => {
 });
 
 app.get('/associacoes', async (req, res) => {
-    try {
-        const associacoes = await obterAssociacoes();
-        res.status(200).json(associacoes);
-    } catch (error) {
-        console.error("Erro ao buscar todas as associações:", error);
-        res.status(500).json({ error: "Erro ao buscar todas as associações" });
-    }
+  const { page = 1, limit = 10 } = req.query;
+
+  try {
+    const result = await obterAssociacoes(parseInt(page), parseInt(limit));
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Erro ao buscar todas as associações:", error);
+    res.status(500).json({ error: "Erro ao buscar todas as associações" });
+  }
 });
+
 
 app.post('/adicionar-pdf', upload.array('files'), async (req, res) => {
     try {
