@@ -13,6 +13,7 @@ import { criarConta } from './modules/login/createLogin.js';
 import { associatePdf } from './modules/pdf/postPdfDescription.js';
 import { associatePdfWithImage } from './modules/pdf/getAllAssociations.js';
 import { upload, uploadImage, getImage, getAllImages } from './modules/pdf/imageUpload.js';
+import { getPdfImageAssociations } from './modules/pdf/getPdfImageAssociations.js';
 
 const app = express();
 
@@ -143,6 +144,10 @@ app.get('/image/:id', getImage);
 app.get('/images', getAllImages);
 app.post('/associar-pdf-imagem', async (req, res) => {
     await associatePdfWithImage(req, res);
+});
+
+app.get('/associacoes-pdf-imagem', async (req, res) => {
+    await getPdfImageAssociations(req, res);
 });
 
 app.listen(5000, () => {
