@@ -35,4 +35,15 @@ const getImage = async (req, res) => {
   }
 };
 
-export { upload, uploadImage, getImage };
+const getAllImages = async (req, res) => {
+  try {
+    const result = await db.query('SELECT id FROM images');
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar imagens' });
+  }
+};
+
+export { upload, uploadImage, getImage, getAllImages };
+
