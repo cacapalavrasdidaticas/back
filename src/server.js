@@ -13,6 +13,7 @@ import { obterAssociacoes } from './modules/pdf/getAllAssociations.js';
 
 const app = express();
 
+// Configuração do CORS
 const corsOptions = {
     origin: 'http://localhost:3000', // Permitir requisições de http://localhost:3000
     optionsSuccessStatus: 200,
@@ -20,13 +21,22 @@ const corsOptions = {
     allowedHeaders: ['Content-Type', 'api-key'] // Cabeçalhos permitidos
 };
 app.use(cors(corsOptions));
-// app.use(cors());
+
 app.use(express.json());
 app.use(validateApiKey);
 
 // Configuração do multer para armazenamento em memória
-const storage = multer.memoryStorage();
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+});
 const upload = multer({ storage: storage });
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Servir arquivos estáticos da pasta uploads
 
 app.get('/', (req, res) => {
     res.send('Funcionou sapohha');
