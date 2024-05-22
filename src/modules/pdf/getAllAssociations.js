@@ -7,9 +7,11 @@ export async function obterAssociacoes() {
       FROM pdf_descriptions pd
       JOIN pdfs p ON pd.pdf_id = p.id
     `);
+
+    // Mapear as associações e garantir que fotos seja um array
     return associacoes.map(assoc => ({
       ...assoc,
-      fotos: assoc.fotos ? assoc.fotos.slice(1, -1).split(',').map(foto => foto.trim().replace(/"/g, '')) : []
+      fotos: assoc.fotos ? assoc.fotos : [] // Garantir que fotos seja um array
     }));
   } catch (error) {
     console.log("Erro ao obter associações:", error);
