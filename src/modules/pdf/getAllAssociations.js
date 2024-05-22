@@ -15,7 +15,7 @@ export async function obterAssociacoes(page = 1, limit = 10) {
     return {
       associacoes: associacoes.map(assoc => ({
         ...assoc,
-        fotos: assoc.fotos || [] // Garantir que fotos seja um array
+        fotos: Array.isArray(assoc.fotos) ? assoc.fotos : [] // Garantir que fotos seja um array
       })),
       totalPages: Math.ceil(total.count / limit)
     };
