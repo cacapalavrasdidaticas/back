@@ -5,7 +5,7 @@ const associatePdfWithImage = async (req, res) => {
   const { pdfId, imageId, title, description, price, link, imageAlt } = req.body;
   try {
     const result = await db.query(
-      'INSERT INTO pdf_image_associations (pdf_id, image_id, title, description, price, link, imageAlt) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id',
+      'INSERT INTO images (pdf_id, image_id, title, description, price, link, imageAlt) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id',
       [pdfId, imageId, title, description, price, link, imageAlt]
     );
     if (result && result.length > 0) {
