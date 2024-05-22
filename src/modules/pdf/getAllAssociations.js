@@ -6,6 +6,7 @@ export async function obterAssociacoes() {
       SELECT pd.id, p.nome_do_arquivo, pd.descricao, pd.fotos
       FROM pdf_descriptions pd
       JOIN pdfs p ON pd.pdf_id = p.id
+      LIMIT 100 -- Limite adicionado para teste, ajuste conforme necessário
     `);
 
     // Mapear as associações e garantir que fotos seja um array
