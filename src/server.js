@@ -20,21 +20,11 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Função assíncrona para criar o diretório 'uploads'
-const createUploadsDir = async () => {
-    try {
-        await fs.promises.mkdir(path.join(__dirname, 'uploads'), { recursive: true });
-        console.log("Diretório 'uploads' criado com sucesso!");
-    } catch (error) {
-        if (error.code !== 'EEXIST') {
-            console.error("Erro ao criar o diretório 'uploads':", error);
-            process.exit(1); // Sair do processo se não conseguir criar o diretório
-        }
-    }
-};
-
-// Criar o diretório 'uploads' se ele não existir
-await createUploadsDir();
+// Usar diretório temporário em ambientes serverless
+const uploadDir = path.join('/tmp', 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 // Configuração do CORS
 const corsOptions = {
@@ -51,7 +41,7 @@ app.use(validateApiKey);
 // Configuração do multer para armazenamento em disco
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/');
+    cb(null, uploadDir); // Usar o diretório temporário
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -59,7 +49,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Servir arquivos estáticos da pasta uploads
+app.use('/uploads', express.static(uploadDir)); // Servir arquivos estáticos da pasta uploads
 
 app.get('/', (req, res) => {
     res.send('Funcionou sapohha');
