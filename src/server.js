@@ -50,7 +50,7 @@ const upload = multer({ storage: storage });
 
 app.use('/uploads', express.static(uploadDir)); // Servir arquivos estáticos da pasta uploads
 
-app.use(validateApiKey); // Aplicar validação de chave API
+// app.use(validateApiKey);
 
 app.get('/', (req, res) => {
     res.send('Funcionou sapohha');
