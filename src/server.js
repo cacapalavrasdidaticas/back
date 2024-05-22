@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -13,6 +12,7 @@ import { loginUsuario } from './modules/login/login.js';
 import { criarConta } from './modules/login/createLogin.js';
 import { associatePdf } from './modules/pdf/postPdfDescription.js';
 import { obterAssociacoes } from './modules/pdf/getAllAssociations.js';
+import { upload, uploadImage, getImage } from './modules/pdf/imageUpload.js';
 
 const app = express();
 
@@ -36,17 +36,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(express.json());
-
-// Configuração do multer para armazenamento em disco
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir); // Usar o diretório temporário
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  }
-});
-const upload = multer({ storage: storage });
 
 // Servir arquivos estáticos da pasta uploads
 app.use('/uploads', express.static(uploadDir));
@@ -147,6 +136,10 @@ app.post('/associar-pdf', upload.array('fotos'), async (req, res) => {
         res.status(500).json({ error: "Erro ao associar PDF" });
     }
 });
+
+// Novas rotas para upload e recuperação de imagem
+app.post('/upload-image', upload.single('image'), uploadImage);
+app.get('/image/:id', getImage);
 
 app.listen(5000, () => {
     console.log("API rodando na porta 5000");
