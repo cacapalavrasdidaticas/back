@@ -12,7 +12,7 @@ import { loginUsuario } from './modules/login/login.js';
 import { criarConta } from './modules/login/createLogin.js';
 import { associatePdf } from './modules/pdf/postPdfDescription.js';
 import { obterAssociacoes } from './modules/pdf/getAllAssociations.js';
-import { upload, uploadImage, getImage, getAllImages } from './modules/images/imageUpload.js';
+import { upload, uploadImage, getImage, getAllImages } from './modules/pdf/imageUpload.js';
 
 const app = express();
 
