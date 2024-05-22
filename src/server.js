@@ -14,6 +14,10 @@ import { obterAssociacoes } from './modules/pdf/getAllAssociations.js';
 
 const app = express();
 
+// Obter o diretório atual
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // Configuração do CORS
 const corsOptions = {
     origin: 'http://localhost:3000', // Permitir requisições de http://localhost:3000
@@ -26,7 +30,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(validateApiKey);
 
-// Configuração do multer para armazenamento em memória
+// Configuração do multer para armazenamento em disco
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/');
