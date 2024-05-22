@@ -11,7 +11,15 @@ import { criarConta } from './modules/login/createLogin.js';
 import { associatePdf } from './modules/pdf/postPdfDescription.js';
 
 const app = express();
-app.use(cors());
+
+const corsOptions = {
+    origin: 'http://localhost:3000', // Permitir requisições de http://localhost:3000
+    optionsSuccessStatus: 200,
+    methods: ['GET', 'POST'], // Métodos permitidos
+    allowedHeaders: ['Content-Type', 'api-key'] // Cabeçalhos permitidos
+};
+app.use(cors(corsOptions));
+// app.use(cors());
 app.use(express.json());
 app.use(validateApiKey);
 
