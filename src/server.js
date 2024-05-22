@@ -21,7 +21,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Usar diretório temporário em ambientes serverless
-const uploadDir = '/tmp/uploads';
+const uploadDir = path.join('/tmp', 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -36,7 +36,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(express.json());
-app.use(validateApiKey);
 
 // Configuração do multer para armazenamento em disco
 const storage = multer.diskStorage({
@@ -50,6 +49,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.use('/uploads', express.static(uploadDir)); // Servir arquivos estáticos da pasta uploads
+
+app.use(validateApiKey); // Aplicar validação de chave API
 
 app.get('/', (req, res) => {
     res.send('Funcionou sapohha');
@@ -87,17 +88,14 @@ app.get('/pdfs', async (req, res) => {
 });
 
 app.get('/associacoes', async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
-
-  try {
-    const result = await obterAssociacoes(parseInt(page), parseInt(limit));
-    res.status(200).json(result);
-  } catch (error) {
-    console.error("Erro ao buscar todas as associações:", error);
-    res.status(500).json({ error: "Erro ao buscar todas as associações" });
-  }
+    try {
+        const associacoes = await obterAssociacoes();
+        res.status(200).json(associacoes);
+    } catch (error) {
+        console.error("Erro ao buscar todas as associações:", error);
+        res.status(500).json({ error: "Erro ao buscar todas as associações" });
+    }
 });
-
 
 app.post('/adicionar-pdf', upload.array('files'), async (req, res) => {
     try {
