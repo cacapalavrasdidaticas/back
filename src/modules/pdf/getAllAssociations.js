@@ -1,26 +1,22 @@
-import db from "../../db.js";
+import db from '../../db.js';
 
-export async function obterAssociacoes(page = 1, limit = 10) {
-  const offset = (page - 1) * limit;
-
+// Função para associar um PDF a uma imagem
+const associatePdfWithImage = async (req, res) => {
+  const { pdfId, imageId, title, description, price, link, imageAlt } = req.body;
   try {
-    const total = await db.one('SELECT COUNT(*) FROM pdf_descriptions');
-    const associacoes = await db.any(`
-      SELECT pd.id, p.nome_do_arquivo, pd.descricao, pd.fotos
-      FROM pdf_descriptions pd
-      JOIN pdfs p ON pd.pdf_id = p.id
-      LIMIT $1 OFFSET $2
-    `, [limit, offset]);
-
-    return {
-      associacoes: associacoes.map(assoc => ({
-        ...assoc,
-        fotos: Array.isArray(assoc.fotos) ? assoc.fotos : [] // Garantir que fotos seja um array
-      })),
-      totalPages: Math.ceil(total.count / limit)
-    };
+    const result = await db.query(
+      'INSERT INTO pdf_image_associations (pdf_id, image_id, title, description, price, link, imageAlt) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id',
+      [pdfId, imageId, title, description, price, link, imageAlt]
+    );
+    if (result && result.length > 0) {
+      res.json({ id: result[0].id });
+    } else {
+      res.status(500).json({ error: 'Erro ao associar PDF à imagem no banco de dados' });
+    }
   } catch (error) {
-    console.log("Erro ao obter associações:", error);
-    throw error;
+    console.error('Database error:', error);
+    res.status(500).json({ error: 'Erro ao associar PDF à imagem' });
   }
-}
+};
+
+export { associatePdfWithImage };
