@@ -141,6 +141,9 @@ app.post('/associar-pdf', upload.array('fotos'), async (req, res) => {
 app.post('/upload-image', upload.single('image'), uploadImage);
 app.get('/image/:id', getImage);
 app.get('/images', getAllImages);
+app.post('/associar-pdf-imagem', async (req, res) => {
+    await associatePdfWithImage(req, res);
+});
 
 app.listen(5000, () => {
     console.log("API rodando na porta 5000");
