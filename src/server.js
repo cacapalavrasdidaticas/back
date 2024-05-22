@@ -20,11 +20,21 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Função assíncrona para criar o diretório 'uploads'
+const createUploadsDir = async () => {
+    try {
+        await fs.promises.mkdir(path.join(__dirname, 'uploads'), { recursive: true });
+        console.log("Diretório 'uploads' criado com sucesso!");
+    } catch (error) {
+        if (error.code !== 'EEXIST') {
+            console.error("Erro ao criar o diretório 'uploads':", error);
+            process.exit(1); // Sair do processo se não conseguir criar o diretório
+        }
+    }
+};
+
 // Criar o diretório 'uploads' se ele não existir
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
+await createUploadsDir();
 
 // Configuração do CORS
 const corsOptions = {
