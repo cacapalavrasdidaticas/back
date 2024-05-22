@@ -41,12 +41,12 @@ app.use(express.json());
 app.use('/uploads', express.static(uploadDir));
 
 // Aplicar validação de chave API a todas as rotas, exceto as de arquivos estáticos
-app.use((req, res, next) => {
-  if (req.path.startsWith('/uploads')) {
-    return next();
-  }
-  return validateApiKey(req, res, next);
-});
+// app.use((req, res, next) => {
+//   if (req.path.startsWith('/uploads')) {
+//     return next();
+//   }
+//   return validateApiKey(req, res, next);
+// });
 
 app.get('/', (req, res) => {
     res.send('Funcionou sapohha');
