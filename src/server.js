@@ -4,11 +4,11 @@ import multer from 'multer';
 import validateApiKey from './middleware.js';
 
 import { obterPDF } from './modules/pdf/getPdf.js';
+import { obterTodosPDFs } from './modules/pdf/getAllPdf.js';
 import { createPdf } from './modules/pdf/postPdf.js';
 import { loginUsuario } from './modules/login/login.js';
 import { criarConta } from './modules/login/createLogin.js';
 import { associatePdf } from './modules/pdf/postPdfDescription.js';
-import { getPdfs } from './modules/pdf/getAllPdf.js';
 
 const app = express();
 app.use(cors());
@@ -63,15 +63,6 @@ app.post('/adicionar-pdf', upload.array('files'), async (req, res) => {
     }
 });
 
-app.post('/associar-pdf', upload.array('fotos'), async (req, res) => {
-    try {
-        await associatePdf(req, res);
-    } catch (error) {
-        console.error("Erro ao associar PDF:", error);
-        res.status(500).json({ error: "Erro ao associar PDF" });
-    }
-});
-
 app.post('/login', async (req, res) => {
     const { email, senha } = req.body;
 
@@ -95,6 +86,15 @@ app.post('/criar-conta', async (req, res) => {
     } catch (error) {
         console.error("Erro ao criar conta:", error);
         res.status(500).json({ error: "Erro ao criar conta" });
+    }
+});
+
+app.post('/associar-pdf', upload.array('fotos'), async (req, res) => {
+    try {
+        await associatePdf(req, res);
+    } catch (error) {
+        console.error("Erro ao associar PDF:", error);
+        res.status(500).json({ error: "Erro ao associar PDF" });
     }
 });
 
