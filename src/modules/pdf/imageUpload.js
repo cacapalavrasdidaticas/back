@@ -14,8 +14,8 @@ const uploadImage = async (req, res) => {
   
   try {
     const result = await db.query('INSERT INTO images (image) VALUES ($1) RETURNING id', [file.buffer]);
-    if (result.rows && result.rows.length > 0) {
-      res.json({ id: result.rows[0].id });
+    if (result && result.length > 0) {
+      res.json({ id: result[0].id });
     } else {
       res.status(500).json({ error: 'Erro ao salvar a imagem no banco de dados' });
     }
@@ -30,8 +30,8 @@ const getImage = async (req, res) => {
   const { id } = req.params;
   try {
     const result = await db.query('SELECT image FROM images WHERE id = $1', [id]);
-    if (result.rows && result.rows.length > 0) {
-      const image = result.rows[0].image;
+    if (result. && result.length > 0) {
+      const image = result[0].image;
       res.set('Content-Type', 'image/jpeg');
       res.send(image);
     } else {
@@ -47,7 +47,7 @@ const getImage = async (req, res) => {
 const getAllImages = async (req, res) => {
   try {
     const result = await db.query('SELECT id FROM images');
-    if (result.rows) {
+    if (result) {
       res.json(result.rows);
     } else {
       res.status(500).json({ error: 'Erro ao buscar imagens' });
