@@ -15,11 +15,14 @@ export async function associatePdf(req, res) {
       return res.status(404).json({ error: "PDF não encontrado" });
     }
 
+    // Converter o array de caminhos das fotos para o formato de array do PostgreSQL
+    const fotosArray = `{${fotos.map(foto => `"${foto}"`).join(',')}}`;
+
     // Inserir a descrição e fotos na tabela pdf_descriptions
     await db.none("INSERT INTO pdf_descriptions (pdf_id, descricao, fotos) VALUES ($1, $2, $3)", [
       pdf_id,
       descricao,
-      JSON.stringify(fotos) // Armazenar os caminhos das fotos como string JSON
+      fotosArray // Usar o formato de array do PostgreSQL
     ]);
 
     res.status(200).json({ mensagem: "Associação de PDF, descrição e fotos realizada com sucesso" });
