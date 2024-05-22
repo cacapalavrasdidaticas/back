@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import validateApiKey from './middleware.js';
 
@@ -18,6 +19,12 @@ const app = express();
 // Obter o diretório atual
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Criar o diretório 'uploads' se ele não existir
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 // Configuração do CORS
 const corsOptions = {
