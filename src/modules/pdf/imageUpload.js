@@ -14,10 +14,13 @@ const uploadImage = async (req, res) => {
   
   try {
     const result = await db.query('INSERT INTO images (image) VALUES ($1) RETURNING id', [file.buffer]);
-    console.log(result.row, 'no primeiro try')
-    res.json({ id: result.id });
+    if (result.rows && result.rows.length > 0) {
+      res.json({ id: result.rows[0].id });
+    } else {
+      res.status(500).json({ error: 'Erro ao salvar a imagem no banco de dados' });
+    }
   } catch (error) {
-    console.error(error);
+    console.error('Database error:', error);
     res.status(500).json({ error: 'Erro ao fazer upload da imagem' });
   }
 };
@@ -27,16 +30,15 @@ const getImage = async (req, res) => {
   const { id } = req.params;
   try {
     const result = await db.query('SELECT image FROM images WHERE id = $1', [id]);
-    console.log(result)
-    if (result.length > 0) {
-      const image = result.image;
+    if (result.rows && result.rows.length > 0) {
+      const image = result.rows[0].image;
       res.set('Content-Type', 'image/jpeg');
       res.send(image);
     } else {
       res.status(404).json({ error: 'Imagem não encontrada' });
     }
   } catch (error) {
-    console.error(error);
+    console.error('Erro ao recuperar a imagem:', error);
     res.status(500).json({ error: 'Erro ao recuperar a imagem' });
   }
 };
@@ -45,10 +47,13 @@ const getImage = async (req, res) => {
 const getAllImages = async (req, res) => {
   try {
     const result = await db.query('SELECT id FROM images');
-    console.log(result)
-    res.json(result);
+    if (result.rows) {
+      res.json(result.rows);
+    } else {
+      res.status(500).json({ error: 'Erro ao buscar imagens' });
+    }
   } catch (error) {
-    console.error(error);
+    console.error('Erro ao buscar imagens:', error);
     res.status(500).json({ error: 'Erro ao buscar imagens' });
   }
 };
