@@ -21,7 +21,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Usar diretório temporário em ambientes serverless
-const uploadDir = path.join(__dirname, 'uploads'); // Atualizar para usar diretório relativo ao projeto
+const uploadDir = path.join('/tmp', 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -41,7 +41,7 @@ app.use(validateApiKey);
 // Configuração do multer para armazenamento em disco
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, uploadDir); // Usar o diretório relativo ao projeto
+    cb(null, uploadDir); // Usar o diretório temporário
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
