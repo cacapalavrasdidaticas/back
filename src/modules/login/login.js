@@ -7,7 +7,7 @@ const JWT_SECRET = "seu_segredo_secreto"; // Chave secreta para assinar o token 
 export async function loginUsuario(email, senha) {
     try {
         // Buscar o usuário pelo login no banco de dados
-        const usuario = await db.oneOrNone("SELECT * FROM contas WHERE login = $1", email);
+        const usuario = await db.oneOrNone("SELECT * FROM contas WHERE email = $1", email);
 
         // Verificar se o usuário existe
         if (!usuario) {
