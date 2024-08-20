@@ -1,13 +1,13 @@
 import db from "../../db.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken"; // Importe o módulo jsonwebtoken
 
-const JWT_SECRET = "seu_segredo_secreto"; // Substitua por uma chave secreta segura
+const JWT_SECRET = "seu_segredo_secreto"; // Chave secreta para assinar o token JWT
 
 export async function loginUsuario(email, senha) {
     try {
-        // Buscar o usuário pelo email no banco de dados
-        const usuario = await db.oneOrNone("SELECT * FROM contas WHERE email = $1", [email]);
+        // Buscar o usuário pelo login no banco de dados
+        const usuario = await db.oneOrNone("SELECT * FROM contas WHERE login = $1", email);
 
         // Verificar se o usuário existe
         if (!usuario) {
@@ -22,7 +22,7 @@ export async function loginUsuario(email, senha) {
         }
 
         // Gerar um token JWT com os dados do usuário
-        const token = jwt.sign({ id: usuario.id, email: usuario.email }, JWT_SECRET, { expiresIn: "1h" });
+        const token = jwt.sign({ id: usuario.id, login: usuario.login }, JWT_SECRET, { expiresIn: "1h" });
 
         return { token }; // Retorna o token JWT
     } catch (error) {
