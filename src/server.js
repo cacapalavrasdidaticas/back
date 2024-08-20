@@ -138,6 +138,21 @@ app.post('/associar-pdf', upload.array('fotos'), async (req, res) => {
     }
 });
 
+app.put('/atualizar-conta/:id', async (req, res) => {
+    const { id } = req.params;
+    const usuario = req.body;
+
+    try {
+        const updatedAccount = await atualizarConta(id, usuario);
+
+        res.status(200).json({ message: "Conta atualizada com sucesso", updatedAccount });
+    } catch (error) {
+        console.error("Erro ao atualizar conta:", error);
+        res.status(500).json({ error: "Erro ao atualizar conta" });
+    }
+});
+
+
 // Novas rotas para upload e recuperação de imagem
 app.post('/upload-image', upload.single('image'), uploadImage);
 app.get('/image/:id', getImage);
