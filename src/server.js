@@ -144,25 +144,16 @@ app.put('/atualizar-conta/:id', async (req, res) => {
 
     try {
         const updatedAccount = await atualizarConta(id, usuario);
-
         res.status(200).json({ message: "Conta atualizada com sucesso", updatedAccount });
     } catch (error) {
         console.error("Erro ao atualizar conta:", error.message);
 
-        if (error.code === '23505') {
-            res.status(422).json({ 
-                error: "Erro de validação", 
-                message: "Já existe um registro com o mesmo valor para um campo único." 
-            });
-        } else {
-            res.status(500).json({ 
-                error: "Erro ao atualizar conta", 
-                message: "Ocorreu um erro inesperado ao tentar atualizar a conta." 
-            });
-        }
+        res.status(error.statusCode || 500).json({ 
+            error: error.statusCode === 422 ? "Erro de validação" : "Erro ao atualizar conta", 
+            message: error.message 
+        });
     }
 });
-
 
 
 
