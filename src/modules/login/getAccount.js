@@ -9,10 +9,10 @@ export async function buscarContas(id) {
             throw new Error("Usuário não encontrado");
         }
 
-        return usuario
+        return usuario;
         
     } catch (error) {
-        console.error("Erro ao buscar o usuário e gerar o token:", error.message);
+        console.error("Erro ao buscar o usuário:", error.message);
         throw error;
     }
 }
