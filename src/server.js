@@ -15,6 +15,7 @@ import { associatePdfWithImage } from './modules/pdf/getAllAssociations.js';
 import { upload, uploadImage, getImage, getAllImages } from './modules/pdf/imageUpload.js';
 import { getPdfImageAssociations } from './modules/pdf/getPdfImageAssociations.js';
 import { atualizarConta } from './modules/login/putUser.js';
+import { buscarContas } from './modules/getAccount.js';
 const app = express();
 
 // Obter o diretório atual
@@ -152,6 +153,16 @@ app.put('/atualizar-conta/:id', async (req, res) => {
             error: error.statusCode === 422 ? "Erro de validação" : "Erro ao atualizar conta", 
             message: error.message 
         });
+    }
+});
+
+app.get('/contas', async (req, res) => {
+    try {
+        const pdfs = await buscarContas();
+        res.status(200).json(pdfs);
+    } catch (error) {
+        console.error("Erro ao buscar todos os PDFs:", error);
+        res.status(500).json({ error: "Erro ao buscar todos os PDFs" });
     }
 });
 
