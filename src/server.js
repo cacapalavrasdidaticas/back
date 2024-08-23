@@ -149,10 +149,10 @@ app.put('/atualizar-conta/:id', async (req, res) => {
     } catch (error) {
         console.error("Erro ao atualizar conta:", error.message);
 
-        if (error.message.includes('already exists') || error.message.includes('violates')) {
+        if (error.code === '23505') {
             res.status(422).json({ 
                 error: "Erro de validação", 
-                message: error.message 
+                message: "Já existe um registro com o mesmo valor para um campo único." 
             });
         } else {
             res.status(500).json({ 
@@ -162,6 +162,7 @@ app.put('/atualizar-conta/:id', async (req, res) => {
         }
     }
 });
+
 
 
 
