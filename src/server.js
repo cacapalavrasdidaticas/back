@@ -30,10 +30,9 @@ if (!fs.existsSync(uploadDir)) {
 
 // Configuração do CORS
 const corsOptions = {
-    origin: 'http://localhost:3000', 'https://front-end-pdf.vercel.app/', // Permitir requisições de http://localhost:3000
-    optionsSuccessStatus: 200,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Métodos permitidos
-    allowedHeaders: ['Content-Type', 'api-key'] // Cabeçalhos permitidos
+    origin: ['http://localhost:3000', 'https://front-end-pdf.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'api-key']
 };
 app.use(cors(corsOptions));
 
