@@ -148,12 +148,21 @@ app.put('/atualizar-conta/:id', async (req, res) => {
         res.status(200).json({ message: "Conta atualizada com sucesso", updatedAccount });
     } catch (error) {
         console.error("Erro ao atualizar conta:", error.message);
-        res.status(500).json({ 
-            error: "Erro ao atualizar conta", 
-            message: error.message
-        });
+
+        if (error.message.includes('already exists') || error.message.includes('violates')) {
+            res.status(422).json({ 
+                error: "Erro de validação", 
+                message: error.message 
+            });
+        } else {
+            res.status(500).json({ 
+                error: "Erro ao atualizar conta", 
+                message: "Ocorreu um erro inesperado ao tentar atualizar a conta." 
+            });
+        }
     }
 });
+
 
 
 
