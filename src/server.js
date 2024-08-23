@@ -15,7 +15,7 @@ import { associatePdfWithImage } from './modules/pdf/getAllAssociations.js';
 import { upload, uploadImage, getImage, getAllImages } from './modules/pdf/imageUpload.js';
 import { getPdfImageAssociations } from './modules/pdf/getPdfImageAssociations.js';
 import { atualizarConta } from './modules/login/putUser.js';
-import { buscarContas } from './modules/login/getAccount.js';
+import { buscarContas } from './modules/login/getAccount.js';   
 const app = express();
 
 // Obter o diretório atual
