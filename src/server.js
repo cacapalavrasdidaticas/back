@@ -148,7 +148,7 @@ app.put('/atualizar-conta/:id', async (req, res) => {
         res.status(200).json({ message: "Conta atualizada com sucesso", updatedAccount });
     } catch (error) {
         console.error("Erro ao atualizar conta:", error);
-        res.status(500).json({ error: "Erro ao atualizar conta" });
+        res.status(500).json({ error: "Erro ao atualizar conta" }, error);
     }
 });
 
