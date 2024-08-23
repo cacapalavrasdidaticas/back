@@ -17,6 +17,22 @@ export async function atualizarConta(id, usuario) {
         senha
     } = usuario;
 
+    // Log para verificar os dados recebidos
+    console.log('Dados recebidos para atualização:', {
+        nome,
+        sexo,
+        dataNascimento,
+        email,
+        cpf,
+        telefoneCelular,
+        endereco,
+        bairro,
+        cidadeUF,
+        cep,
+        pais,
+        senha
+    });
+
     // Se a senha for fornecida, precisamos criptografá-la
     let hashedSenha;
     if (senha) {
@@ -58,6 +74,9 @@ export async function atualizarConta(id, usuario) {
             hashedSenha,
             id
         ]);
+
+        // Log para verificar o resultado da atualização
+        console.log('Resultado da atualização:', updatedAccount);
 
         return updatedAccount;
     } catch (error) {
