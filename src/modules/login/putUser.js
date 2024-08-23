@@ -28,7 +28,9 @@ export async function atualizarConta(id, usuario) {
         if (email) {
             const existingEmail = await db.oneOrNone('SELECT id FROM contas WHERE email = $1 AND id != $2', [email, id]);
             if (existingEmail) {
-                throw new Error('O email já está em uso por outra conta.');
+                const error = new Error('O email já está em uso por outra conta.');
+                error.statusCode = 422;
+                throw error;
             }
         }
 
@@ -52,7 +54,7 @@ export async function atualizarConta(id, usuario) {
         `;
 
         const updatedAccount = await db.one(query, [
-            nome ?? null, // Se o valor não existir, COALESCE usará o valor atual do banco
+            nome ?? null, 
             sexo ?? null,
             dataNascimento ?? null,
             email ?? null,
@@ -70,6 +72,16 @@ export async function atualizarConta(id, usuario) {
         return updatedAccount;
     } catch (error) {
         console.error("Erro ao atualizar a conta:", error.message);
+
+        if (!error.statusCode) {
+            if (error.code === '23505') {
+                error.statusCode = 422; // Violação de chave única
+                error.message = 'Já existe um registro com o mesmo valor para um campo único.';
+            } else {
+                error.statusCode = 500; // Outros erros
+            }
+        }
+
         throw error;
     }
 }
