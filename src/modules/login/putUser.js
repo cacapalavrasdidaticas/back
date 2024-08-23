@@ -9,7 +9,7 @@ export async function atualizarConta(id, usuario) {
         email,
         cpf,
         telefoneCelular,
-        endereco,
+        rua,       // Novo campo para rua
         bairro,
         cidadeUF,
         cep,
@@ -17,14 +17,12 @@ export async function atualizarConta(id, usuario) {
         senha
     } = usuario;
 
-    // Se a senha for fornecida, precisamos criptografá-la
     let hashedSenha;
     if (senha) {
         hashedSenha = await bcrypt.hash(senha, 10);
     }
 
     try {
-        // Verifique se o email já existe em outro registro, caso o email esteja presente no payload
         if (email) {
             const existingEmail = await db.oneOrNone('SELECT id FROM contas WHERE email = $1 AND id != $2', [email, id]);
             if (existingEmail) {
@@ -33,8 +31,6 @@ export async function atualizarConta(id, usuario) {
                 throw error;
             }
         }
-
-        // Atualizando os dados da conta no banco de dados, somente se o campo estiver presente no payload
         const query = `
             UPDATE contas
             SET nome = COALESCE($1, nome),
@@ -43,7 +39,7 @@ export async function atualizarConta(id, usuario) {
                 email = COALESCE($4, email),
                 cpf = COALESCE($5, cpf),
                 telefoneCelular = COALESCE($6, telefoneCelular),
-                endereco = COALESCE($7, endereco),
+                rua = COALESCE($7, rua),  // Atualização do campo rua
                 bairro = COALESCE($8, bairro),
                 cidadeUF = COALESCE($9, cidadeUF),
                 cep = COALESCE($10, cep),
@@ -60,7 +56,7 @@ export async function atualizarConta(id, usuario) {
             email ?? null,
             cpf ?? null,
             telefoneCelular ?? null,
-            endereco ? JSON.stringify(endereco) : null,
+            rua ?? null,
             bairro ?? null,
             cidadeUF ?? null,
             cep ?? null,
@@ -75,10 +71,10 @@ export async function atualizarConta(id, usuario) {
 
         if (!error.statusCode) {
             if (error.code === '23505') {
-                error.statusCode = 422; // Violação de chave única
+                error.statusCode = 422;
                 error.message = 'Já existe um registro com o mesmo valor para um campo único.';
             } else {
-                error.statusCode = 500; // Outros erros
+                error.statusCode = 500;
             }
         }
 
