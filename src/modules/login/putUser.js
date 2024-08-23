@@ -39,7 +39,7 @@ export async function atualizarConta(id, usuario) {
                 email = COALESCE($4, email),
                 cpf = COALESCE($5, cpf),
                 telefoneCelular = COALESCE($6, telefoneCelular),
-                rua = COALESCE($7, rua),  // Atualização do campo rua
+                rua = COALESCE($7, rua),
                 bairro = COALESCE($8, bairro),
                 cidadeUF = COALESCE($9, cidadeUF),
                 cep = COALESCE($10, cep),
