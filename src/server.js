@@ -31,7 +31,7 @@ if (!fs.existsSync(uploadDir)) {
 const corsOptions = {
     origin: 'http://localhost:3000', // Permitir requisições de http://localhost:3000
     optionsSuccessStatus: 200,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'] // Métodos permitidos
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Métodos permitidos
     allowedHeaders: ['Content-Type', 'api-key'] // Cabeçalhos permitidos
 };
 app.use(cors(corsOptions));
