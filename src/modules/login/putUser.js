@@ -2,9 +2,21 @@ import db from "../../db.js";
 import bcrypt from "bcrypt";
 
 export async function atualizarConta(id, usuario) {
-    const { nome, sexo, dataNascimento, email, cpf, telefoneCelular, endereco, bairro, cidadeUF, cep, pais, senha } = usuario;
+    const {
+        nome,
+        sexo,
+        dataNascimento,
+        email,
+        cpf,
+        telefoneCelular,
+        endereco,
+        bairro,
+        cidadeUF,
+        cep,
+        pais,
+        senha
+    } = usuario;
 
-    console.log(usuario)
     // Se a senha for fornecida, precisamos criptografá-la
     let hashedSenha;
     if (senha) {
@@ -15,17 +27,17 @@ export async function atualizarConta(id, usuario) {
         // Atualizando os dados da conta no banco de dados
         const query = `
             UPDATE contas
-            SET nome = $1,
-                sexo = $2,
-                dataNascimento = $3,
-                email = $4,
-                cpf = $5,
-                telefoneCelular = $6,
-                endereco = $7,
-                bairro = $8,
-                cidadeUF = $9,
-                cep = $10,
-                pais = $11,
+            SET nome = COALESCE($1, nome),
+                sexo = COALESCE($2, sexo),
+                dataNascimento = COALESCE($3, dataNascimento),
+                email = COALESCE($4, email),
+                cpf = COALESCE($5, cpf),
+                telefoneCelular = COALESCE($6, telefoneCelular),
+                endereco = COALESCE($7, endereco),
+                bairro = COALESCE($8, bairro),
+                cidadeUF = COALESCE($9, cidadeUF),
+                cep = COALESCE($10, cep),
+                pais = COALESCE($11, pais),
                 senha = COALESCE($12, senha)
             WHERE id = $13
             RETURNING *;
@@ -38,7 +50,7 @@ export async function atualizarConta(id, usuario) {
             email,
             cpf,
             telefoneCelular,
-            JSON.stringify(endereco), // Converte o objeto para string JSON
+            JSON.stringify(endereco),
             bairro,
             cidadeUF,
             cep,
@@ -46,8 +58,6 @@ export async function atualizarConta(id, usuario) {
             hashedSenha,
             id
         ]);
-
-        console.log(updatedAccont, 'dados atualizados')
 
         return updatedAccount;
     } catch (error) {
