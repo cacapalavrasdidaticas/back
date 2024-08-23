@@ -157,12 +157,14 @@ app.put('/atualizar-conta/:id', async (req, res) => {
 });
 
 app.get('/contas/:id', async (req, res) => {
+    const { id } = req.params; 
+
     try {
-        const pdfs = await buscarContas();
-        res.status(200).json(pdfs);
+        const usuario = await buscarContas(id); 
+        res.status(200).json(usuario);
     } catch (error) {
-        console.error("Erro ao buscar todos os PDFs:", error);
-        res.status(500).json({ error: "Erro ao buscar todos os PDFs" });
+        console.error("Erro ao buscar a conta:", error);
+        res.status(500).json({ error: "Erro ao buscar a conta" });
     }
 });
 
