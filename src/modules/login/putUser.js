@@ -2,7 +2,7 @@ import db from "../../db.js";
 import bcrypt from "bcrypt";
 
 export async function atualizarConta(id, usuario) {
-    const { nome, sexo, dataNascimento, email, cpf, telefoneCelular, endereco, senha } = usuario;
+    const { nome, sexo, dataNascimento, email, cpf, telefoneCelular, endereco, bairro, cidadeUF, cep, pais, senha } = usuario;
 
     // Se a senha for fornecida, precisamos criptografá-la
     let hashedSenha;
@@ -21,8 +21,12 @@ export async function atualizarConta(id, usuario) {
                 cpf = $5,
                 telefoneCelular = $6,
                 endereco = $7,
-                senha = COALESCE($8, senha)
-            WHERE id = $9
+                bairro = $8,
+                cidadeUF = $9,
+                cep = $10,
+                pais = $11,
+                senha = COALESCE($12, senha)
+            WHERE id = $13
             RETURNING *;
         `;
 
@@ -33,13 +37,18 @@ export async function atualizarConta(id, usuario) {
             email,
             cpf,
             telefoneCelular,
-            endereco,
+            JSON.stringify(endereco), // Converte o objeto para string JSON
+            bairro,
+            cidadeUF,
+            cep,
+            pais,
             hashedSenha,
             id
         ]);
 
         return updatedAccount;
     } catch (error) {
+        console.error("Erro ao atualizar a conta:", error);
         throw error;
     }
 }
