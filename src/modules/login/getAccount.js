@@ -1,7 +1,7 @@
 import db from "../../db.js";
 import jwt from "jsonwebtoken"; 
 
-export async function loginUsuario(id) {
+export async function buscarContas(id) {
     try {
         const usuario = await db.oneOrNone("SELECT * FROM contas WHERE id = $1", [id]);
 
