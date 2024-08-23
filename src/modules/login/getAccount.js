@@ -11,7 +11,7 @@ export async function buscarContas(id) {
 
          const data = { usuario: usuario};
 
-        return usuario;
+        return data;
         
     } catch (error) {
         console.error("Erro ao buscar o usuário:", error.message);
