@@ -156,7 +156,7 @@ app.put('/atualizar-conta/:id', async (req, res) => {
     }
 });
 
-app.get('/contas', async (req, res) => {
+app.get('/contas/:id', async (req, res) => {
     try {
         const pdfs = await buscarContas();
         res.status(200).json(pdfs);
