@@ -9,6 +9,8 @@ export async function buscarContas(id) {
             throw new Error("Usuário não encontrado");
         }
 
+         const data = { usuario: usuario};
+
         return usuario;
         
     } catch (error) {
