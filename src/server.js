@@ -150,7 +150,7 @@ app.put('/atualizar-conta/:id', async (req, res) => {
         console.error("Erro ao atualizar conta:", error.message);
         res.status(500).json({ 
             error: "Erro ao atualizar conta", 
-            message: error.message;
+            message: error.message
         });
     }
 });
