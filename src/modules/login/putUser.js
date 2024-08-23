@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 export async function atualizarConta(id, usuario) {
     const { nome, sexo, dataNascimento, email, cpf, telefoneCelular, endereco, bairro, cidadeUF, cep, pais, senha } = usuario;
 
+    console.log(usuario)
     // Se a senha for fornecida, precisamos criptografá-la
     let hashedSenha;
     if (senha) {
@@ -45,6 +46,8 @@ export async function atualizarConta(id, usuario) {
             hashedSenha,
             id
         ]);
+
+        console.log(updatedAccont, 'dados atualizados')
 
         return updatedAccount;
     } catch (error) {
