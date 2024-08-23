@@ -24,7 +24,7 @@ export async function atualizarConta(id, usuario) {
     }
 
     try {
-        // Verifique se o email já existe em outro registro
+        // Verifique se o email já existe em outro registro, caso o email esteja presente no payload
         if (email) {
             const existingEmail = await db.oneOrNone('SELECT id FROM contas WHERE email = $1 AND id != $2', [email, id]);
             if (existingEmail) {
@@ -32,7 +32,7 @@ export async function atualizarConta(id, usuario) {
             }
         }
 
-        // Atualizando os dados da conta no banco de dados
+        // Atualizando os dados da conta no banco de dados, somente se o campo estiver presente no payload
         const query = `
             UPDATE contas
             SET nome = COALESCE($1, nome),
@@ -52,18 +52,18 @@ export async function atualizarConta(id, usuario) {
         `;
 
         const updatedAccount = await db.one(query, [
-            nome,
-            sexo,
-            dataNascimento,
-            email,
-            cpf,
-            telefoneCelular,
-            JSON.stringify(endereco),
-            bairro,
-            cidadeUF,
-            cep,
-            pais,
-            hashedSenha,
+            nome ?? null, // Se o valor não existir, COALESCE usará o valor atual do banco
+            sexo ?? null,
+            dataNascimento ?? null,
+            email ?? null,
+            cpf ?? null,
+            telefoneCelular ?? null,
+            endereco ? JSON.stringify(endereco) : null,
+            bairro ?? null,
+            cidadeUF ?? null,
+            cep ?? null,
+            pais ?? null,
+            hashedSenha ?? null,
             id
         ]);
 
