@@ -147,10 +147,14 @@ app.put('/atualizar-conta/:id', async (req, res) => {
 
         res.status(200).json({ message: "Conta atualizada com sucesso", updatedAccount });
     } catch (error) {
-        console.error("Erro ao atualizar conta:", error);
-        res.status(500).json({ error: "Erro ao atualizar conta" }, error);
+        console.error("Erro ao atualizar conta:", error.message);
+        res.status(500).json({ 
+            error: "Erro ao atualizar conta", 
+            message: error.message;
+        });
     }
 });
+
 
 
 // Novas rotas para upload e recuperação de imagem
