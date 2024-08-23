@@ -17,22 +17,6 @@ export async function atualizarConta(id, usuario) {
         senha
     } = usuario;
 
-    // Log para verificar os dados recebidos
-    console.log('Dados recebidos para atualização:', {
-        nome,
-        sexo,
-        dataNascimento,
-        email,
-        cpf,
-        telefoneCelular,
-        endereco,
-        bairro,
-        cidadeUF,
-        cep,
-        pais,
-        senha
-    });
-
     // Se a senha for fornecida, precisamos criptografá-la
     let hashedSenha;
     if (senha) {
@@ -40,6 +24,14 @@ export async function atualizarConta(id, usuario) {
     }
 
     try {
+        // Verifique se o email já existe em outro registro
+        if (email) {
+            const existingEmail = await db.oneOrNone('SELECT id FROM contas WHERE email = $1 AND id != $2', [email, id]);
+            if (existingEmail) {
+                throw new Error('O email já está em uso por outra conta.');
+            }
+        }
+
         // Atualizando os dados da conta no banco de dados
         const query = `
             UPDATE contas
@@ -75,12 +67,9 @@ export async function atualizarConta(id, usuario) {
             id
         ]);
 
-        // Log para verificar o resultado da atualização
-        console.log('Resultado da atualização:', updatedAccount);
-
         return updatedAccount;
     } catch (error) {
-        console.error("Erro ao atualizar a conta:", error);
+        console.error("Erro ao atualizar a conta:", error.message);
         throw error;
     }
 }
