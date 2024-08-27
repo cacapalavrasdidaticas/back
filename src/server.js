@@ -20,6 +20,9 @@ import { createProduto } from "./modules/produtos/postProdutos.js";
 import { obterProduto } from "./modules/produtos/getProdutoId.js";
 import { obterTodosProdutos } from "./modules/produtos/getProdutos.js";
 const app = express();
+const compression = require('compression');
+
+
 
 // Obter o diretório atual
 const __filename = fileURLToPath(import.meta.url);
@@ -37,6 +40,7 @@ const corsOptions = {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'api-key']
 };
+app.use(compression());
 app.use(cors(corsOptions));
 
 app.use(express.json());
