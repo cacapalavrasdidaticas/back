@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
 import path from 'path';
-import compression from 'compression';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import compression from 'compression';
 import validateApiKey from './middleware.js';
 
 import { obterPDF } from './modules/pdf/getPdf.js';
