@@ -21,6 +21,7 @@ import { createProduto } from "./modules/produtos/postProdutos.js";
 import { obterProduto } from "./modules/produtos/getProdutoId.js";
 import { obterTodosProdutos } from "./modules/produtos/getProdutos.js";
 import { obterTodosProdutosDescricao } from "./modules/produtos/getDescription.js";
+import { updateProduto } from "./modules/produtos/putProdutos.js";
 const app = express();
 
 
@@ -233,6 +234,15 @@ app.get('/produtos/descricao', async (req, res) => {
     } catch (error) {
         console.error("Erro ao buscar produtos:", error);
         res.status(500).json({ error: "Erro ao buscar produtos" });
+    }
+});
+
+app.put('/produto/:id', upload.fields([{ name: 'pdf', maxCount: 1 }, { name: 'fotos', maxCount: 10 }]), async (req, res) => {
+    try {
+        await updateProduto(req, res);
+    } catch (error) {
+        console.error("Erro ao atualizar produto:", error);
+        res.status(500).json({ error: "Erro ao atualizar produto" });
     }
 });
 
