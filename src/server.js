@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import path from 'path';
+import compression from 'compression';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import validateApiKey from './middleware.js';
@@ -20,7 +21,6 @@ import { createProduto } from "./modules/produtos/postProdutos.js";
 import { obterProduto } from "./modules/produtos/getProdutoId.js";
 import { obterTodosProdutos } from "./modules/produtos/getProdutos.js";
 const app = express();
-const compression = require('compression');
 
 
 
