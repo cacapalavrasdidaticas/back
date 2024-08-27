@@ -15,7 +15,10 @@ import { associatePdfWithImage } from './modules/pdf/getAllAssociations.js';
 import { upload, uploadImage, getImage, getAllImages } from './modules/pdf/imageUpload.js';
 import { getPdfImageAssociations } from './modules/pdf/getPdfImageAssociations.js';
 import { atualizarConta } from './modules/login/putUser.js';
-import { buscarContas } from './modules/login/getAccount.js';   
+import { buscarContas } from './modules/login/getAccount.js';
+import { createProduto } from "./modules/produtos/postProdutos.js";
+import { obterProduto } from "./modules/produtos/getProdutoId.js";
+import { obterTodosProdutos } from "./modules/produtos/getProdutos.js";
 const app = express();
 
 // Obter o diretório atual
@@ -180,6 +183,42 @@ app.post('/associar-pdf-imagem', async (req, res) => {
 
 app.get('/associacoes-pdf-imagem', async (req, res) => {
     await getPdfImageAssociations(req, res);
+});
+
+app.post('/adicionar-produto', upload.fields([{ name: 'pdf', maxCount: 1 }, { name: 'fotos', maxCount: 10 }]), async (req, res) => {
+    try {
+        await createProduto(req, res);
+    } catch (error) {
+        console.error("Erro ao adicionar produto:", error);
+        res.status(500).json({ error: "Erro ao adicionar produto" });
+    }
+});
+
+app.get('/produtos', async (req, res) => {
+    try {
+        const produtos = await obterTodosProdutos();
+        res.status(200).json(produtos);
+    } catch (error) {
+        console.error("Erro ao buscar produtos:", error);
+        res.status(500).json({ error: "Erro ao buscar produtos" });
+    }
+});
+
+app.get('/produto/:id', async (req, res) => {
+    const produtoId = req.params.id;
+
+    try {
+        const produto = await obterProduto(produtoId);
+
+        if (produto) {
+            res.status(200).json(produto);
+        } else {
+            res.status(404).json({ error: "Produto não encontrado" });
+        }
+    } catch (error) {
+        console.error("Erro ao buscar produto:", error);
+        res.status(500).json({ error: "Erro ao buscar produto" });
+    }
 });
 
 app.listen(5000, () => {
