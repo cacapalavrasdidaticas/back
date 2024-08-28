@@ -30,7 +30,7 @@ export async function createProduto(req, res) {
 
     try {
         // Converter o valor para um número com duas casas decimais
-        const valorNumerico = parseFloat(valor).toFixed(2);
+        const valorNumerico = parseFloat(valor.replace(',', '.')).toFixed(2);
         console.log('Valor inserido:', valorNumerico);
 
 
