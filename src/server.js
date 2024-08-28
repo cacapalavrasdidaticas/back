@@ -23,7 +23,7 @@ import { obterTodosProdutos } from "./modules/produtos/getProdutos.js";
 import { obterTodosProdutosDescricao } from "./modules/produtos/getDescription.js";
 import { updateProduto } from "./modules/produtos/putProdutos.js";
 import { deleteProduto } from "./modules/produtos/deleteProdutos.js";
-import { obterTodasContas } from "./modules/contas/getContas.js";
+import { obterTodasContas } from "./modules/login/getContas.js";
 const app = express();
 
 
