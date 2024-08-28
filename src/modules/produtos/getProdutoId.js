@@ -4,10 +4,12 @@ import db from "../../db.js";
 export async function obterProduto(id) {
     try {
         const produto = await db.oneOrNone(`
-            SELECT id, nome_produto, descricao, categoria, nivel_ensino, valor, componente_curricular, fotos, pdf
+            SELECT id, nome_produto, descricao, categoria, nivel_ensino, valor, componente_curricular, fotos
             FROM produtos
             WHERE id = $1
         `, [id]);
+
+        console.log(produto)
 
         return produto;
     } catch (error) {
