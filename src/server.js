@@ -22,6 +22,7 @@ import { obterProduto } from "./modules/produtos/getProdutoId.js";
 import { obterTodosProdutos } from "./modules/produtos/getProdutos.js";
 import { obterTodosProdutosDescricao } from "./modules/produtos/getDescription.js";
 import { updateProduto } from "./modules/produtos/putProdutos.js";
+import { deleteProduto } from "./modules/produtos/deleteProdutos.js";
 const app = express();
 
 
@@ -243,6 +244,15 @@ app.put('/produto/:id', upload.fields([{ name: 'pdf', maxCount: 1 }, { name: 'fo
     } catch (error) {
         console.error("Erro ao atualizar produto:", error);
         res.status(500).json({ error: "Erro ao atualizar produto" });
+    }
+});
+
+app.delete('/produto/:id', async (req, res) => {
+    try {
+        await deleteProduto(req, res);
+    } catch (error) {
+        console.error("Erro ao deletar produto:", error);
+        res.status(500).json({ error: "Erro ao deletar produto" });
     }
 });
 
