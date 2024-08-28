@@ -27,6 +27,7 @@ export async function createProduto(req, res) {
     const { nome_produto, descricao, categoria, nivel_ensino, valor, componente_curricular } = req.body;
     const pdfFile = req.files['pdf'] ? req.files['pdf'][0] : null;
     const fotosFiles = req.files['fotos'] || [];
+    console.log('Valor body', req.body, pdfFile, fotosFiles);
 
     try {
         // Converter o valor para um número com duas casas decimais
