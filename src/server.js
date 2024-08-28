@@ -23,6 +23,7 @@ import { obterTodosProdutos } from "./modules/produtos/getProdutos.js";
 import { obterTodosProdutosDescricao } from "./modules/produtos/getDescription.js";
 import { updateProduto } from "./modules/produtos/putProdutos.js";
 import { deleteProduto } from "./modules/produtos/deleteProdutos.js";
+import { obterTodasContas } from "./modules/contas/getContas.js";
 const app = express();
 
 
@@ -253,6 +254,16 @@ app.delete('/produto/:id', async (req, res) => {
     } catch (error) {
         console.error("Erro ao deletar produto:", error);
         res.status(500).json({ error: "Erro ao deletar produto" });
+    }
+});
+
+app.get('/contas', async (req, res) => {
+    try {
+        const contas = await obterTodasContas();
+        res.status(200).json(contas);
+    } catch (error) {
+        console.error("Erro ao buscar contas:", error);
+        res.status(500).json({ error: "Erro ao buscar contas" });
     }
 });
 
