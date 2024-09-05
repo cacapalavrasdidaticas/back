@@ -24,6 +24,8 @@ import { obterTodosProdutosDescricao } from "./modules/produtos/getDescription.j
 import { updateProduto } from "./modules/produtos/putProdutos.js";
 import { deleteProduto } from "./modules/produtos/deleteProdutos.js";
 import { obterTodasContas } from "./modules/login/getContas.js";
+import { obterTodosProdutosV2 } from "./modules/produtos/getProdutos2.js";
+import { createProdutoV2 } from "./modules/produtos/postProdutos2.js";
 const app = express();
 
 
@@ -199,6 +201,25 @@ app.post('/adicionar-produto', upload.fields([{ name: 'pdf', maxCount: 1 }, { na
     } catch (error) {
         console.error("Erro ao adicionar produto:", error);
         res.status(500).json({ error: "Erro ao adicionar produto" });
+    }
+});
+
+app.post('/adicionar-produto-v2', upload.fields([{ name: 'part', maxCount: 1 }, { name: 'fotos', maxCount: 10 }]), async (req, res) => {
+    try {
+        await createProdutoV2(req, res);
+    } catch (error) {
+        console.error("Erro ao adicionar produto:", error);
+        res.status(500).json({ error: "Erro ao adicionar produto" });
+    }
+});
+
+app.get('/produtos-v2', async (req, res) => {
+    try {
+        const produtos = await obterTodosProdutosV2();
+        res.status(200).json(produtos);
+    } catch (error) {
+        console.error("Erro ao buscar produtos:", error);
+        res.status(500).json({ error: "Erro ao buscar produtos" });
     }
 });
 
