@@ -8,7 +8,7 @@ if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir, { recursive: true });
 }
 
-export async function createProduto(req, res) {
+export async function createProdutoV2(req, res) {
     const { nome_produto, descricao, categoria, nivel_ensino, valor, componente_curricular, partIndex, totalParts, nomeArquivo } = req.body;
     const fotosFiles = req.files['fotos'] || [];  // Captura os arquivos de fotos
     const pdfPart = req.files['part'] ? req.files['part'][0] : null;  // Captura a parte do PDF
