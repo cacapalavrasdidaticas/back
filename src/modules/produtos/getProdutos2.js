@@ -1,7 +1,7 @@
 import db from "../../db.js";
 
 // Função para obter todos os produtos com fotos e PDFs
-export async function obterTodosProdutos() {
+export async function obterTodosProdutosV2() {
     try {
         const produtos = await db.any(`
             SELECT p.id, p.nome_produto, p.descricao, p.categoria, p.nivel_ensino, p.valor, p.componente_curricular, 
