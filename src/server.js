@@ -288,6 +288,24 @@ app.get('/contas', async (req, res) => {
     }
 });
 
+app.post('/webhook/asaas', (req, res) => {
+  const { event, payment } = req.body;
+    console.log(req.body);
+  
+  if (event === 'PAYMENT_RECEIVED') {
+    const paymentId = payment.id;
+    const clientId = payment.customer;
+    
+    // Atualize o status da compra no banco de dados
+    updatePaymentStatus(clientId, paymentId, 'confirmed');
+
+    res.status(200).send('OK');
+  } else {
+    res.status(400).send('Event not handled');
+  }
+});
+
+
 app.listen(5000, () => {
     console.log("API rodando na porta 5000");
 });
