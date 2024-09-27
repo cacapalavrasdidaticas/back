@@ -30,6 +30,38 @@ import { postPagamento } from "./modules/pagamento/postPagamento.js"
 const app = express();
 
 
+import WebSocket, { WebSocketServer } from 'ws';
+
+// Cria o servidor WebSocket
+const wss = new WebSocketServer({ port: 8080 });
+
+wss.on('connection', (ws) => {
+  console.log('Cliente conectado via WebSocket');
+
+  // Envia uma mensagem de boas-vindas para o cliente
+  ws.send('Conexão WebSocket estabelecida');
+
+  ws.on('message', (message) => {
+    console.log('Mensagem recebida do cliente:', message);
+  });
+
+  ws.on('close', () => {
+    console.log('Cliente desconectado');
+  });
+});
+
+// Função para enviar informações de pagamento para todos os clientes conectados
+function broadcastPaymentUpdate(clientId, paymentId) {
+  const message = JSON.stringify({ clientId, paymentId, status: 'confirmed' });
+
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(message);
+    }
+  });
+}
+
+
 
 // Obter o diretório atual
 const __filename = fileURLToPath(import.meta.url);
@@ -291,20 +323,23 @@ app.get('/contas', async (req, res) => {
 
 app.post('/webhook/asaas', (req, res) => {
   const { event, payment } = req.body;
-    console.log(req.body);
   
   if (event === 'PAYMENT_RECEIVED') {
     const paymentId = payment.id;
     const clientId = payment.customer;
     
     // Atualize o status da compra no banco de dados
-    updatePaymentStatus(clientId, paymentId, 'confirmed');
+    // updatePaymentStatus(clientId, paymentId, 'confirmed');
+
+    // Envia a atualização de pagamento para o front-end via WebSocket
+    broadcastPaymentUpdate(clientId, paymentId);
 
     res.status(200).send('OK');
   } else {
     res.status(400).send('Event not handled');
   }
 });
+
 
 app.post('/payment/:cpf', async (req, res) => {
     const cpf = req.params.cpf; // Captura o CPF da URL
