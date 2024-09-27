@@ -23,8 +23,8 @@ async function buscarProduto(productId) {
         const query = 'SELECT * FROM produtos WHERE id = $1'; // Ajuste conforme a sua tabela de produtos
         const result = await db.query(query, [productId]);
 
-        if (result.rows.length > 0) {
-            return result.rows[0]; // Retorna o produto
+        if (result) {
+            return result; // Retorna o produto
         } else {
             throw new Error('Produto não encontrado');
         }
