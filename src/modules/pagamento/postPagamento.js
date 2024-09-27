@@ -84,4 +84,5 @@ async function enviarPagamento({ customer, billingType, value, dueDate, descript
   }
 }
 
-export default postPagamento;
+// Exportando a função processarPagamento
+export default processarPagamento;
