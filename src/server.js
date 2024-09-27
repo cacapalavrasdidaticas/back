@@ -305,7 +305,7 @@ app.post('/webhook/asaas', (req, res) => {
     const value = payment.value;
     
     // Atualiza o status da compra no banco de dados (função simulada)
-    // updatePaymentStatus(clientId, paymentId, 'confirmed');
+    console.log('Pagamento recebido:', { paymentId, clientId, value });
 
     // Enviar dados para o front-end via Pusher
     pusher.trigger('payments-channel', 'payment-confirmed', {
@@ -313,9 +313,13 @@ app.post('/webhook/asaas', (req, res) => {
       paymentId: paymentId,
       value: value,
       status: 'confirmed'
+    }, (error, request, response) => {
+      if (error) {
+        console.error('Erro ao disparar evento Pusher:', error);
+      } else {
+        console.log('Evento disparado com sucesso:', response);
+      }
     });
-
-    console.log(res, "dados push")
 
     res.status(200).send('OK');
   } else {
