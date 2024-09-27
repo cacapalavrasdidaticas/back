@@ -4,10 +4,8 @@ import fetch from 'node-fetch';
 
 // Função para criar conta
 export async function criarConta(usuario) {
-    // Dados que você recebe
     const { nome, dataNascimento, email, cpf, telefoneCelular, senha } = usuario;
     
-    // Define outros campos como null, já que não são enviados
     const sexo = null;
     const bairro = null;
     const cidadeuf = null;
@@ -15,11 +13,9 @@ export async function criarConta(usuario) {
     const pais = null;
     const rua = null;
 
-    // Criptografa a senha do usuário
     const hashedSenha = await bcrypt.hash(senha, 10);
 
     try {
-        // Insere os dados na tabela, com campos não fornecidos como null
         const novaConta = await db.one(
             `INSERT INTO contas (nome, senha, datanascimento, email, cpf, telefonecelular, sexo, bairro, cidadeuf, cep, pais, rua)
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id`,
@@ -38,27 +34,32 @@ export async function criarConta(usuario) {
 // Função para enviar os dados do cliente para o Asaas
 async function enviarParaAsaas(cliente) {
   const url = 'https://sandbox.asaas.com/api/v3/customers';
+  
+  const body = {
+    name: cliente.nome,
+    cpfCnpj: cliente.cpf
+  };
+
   const options = {
     method: 'POST',
     headers: {
       accept: 'application/json',
       'content-type': 'application/json',
-      access_token: '$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwODk3NDE6OiRhYWNoXzJmZmFkNjFiLWMzZDQtNDE5Ny05YTI3LWZlZjM3Y2NhY2RlMg==',
+      access_token: '$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwODk3NDE6OiRhYWNoXzJmZmFkNjFiLWMzZDQtNDE5Ny05YTI3LWZlZjM3Y2NhY2RlMg==', // Substitua pelo token correto
     },
-    body: JSON.stringify({
-      name: cliente.nome,
-      cpfCnpj: cliente.cpf,
-    }),
+    body: JSON.stringify(body),
   };
 
   try {
     const response = await fetch(url, options);
     const json = await response.json();
-      console.log(response)
+
+    // Log da resposta do Asaas para depuração
+    console.log('Resposta do Asaas:', json);
 
     // Verifica se a resposta foi bem-sucedida
     if (!response.ok) {
-      throw new Error(`Erro ao enviar para Asaas: ${json.message}`);
+      throw new Error(`Erro ao enviar para Asaas: ${json.message || 'Erro desconhecido'}`);
     }
 
     return json;
@@ -67,21 +68,6 @@ async function enviarParaAsaas(cliente) {
     throw err;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
