@@ -4,29 +4,38 @@ import fetch from 'node-fetch';
 
 // Função para criar conta
 export async function criarConta(usuario) {
-  const { nome, sexo, dataNascimento, email, cpf, telefoneCelular, endereco, senha } = usuario;
-  
-  // Criptografa a senha do usuário
-  const hashedSenha = await bcrypt.hash(senha, 10);
-
-  try {
-    // Insere o usuário no banco de dados
-    const novaConta = await db.one(
-      `INSERT INTO contas (nome, sexo, dataNascimento, email, cpf, telefoneCelular, senha)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
-      [nome, sexo, dataNascimento, email, cpf, telefoneCelular, endereco, hashedSenha]
-    );
-
-    // Se a conta for criada com sucesso, envia o nome e o CPF para a API Asaas
-    const resultadoAsaas = await enviarParaAsaas({ nome, cpf });
+    // Dados que você recebe
+    const { nome, dataNascimento, email, cpf, telefoneCelular, senha } = usuario;
     
-    return { id: novaConta.id, asaas: resultadoAsaas };
-  } catch (error) {
-    throw error;
-  }
+    // Define outros campos como null, já que não são enviados
+    const sexo = null;
+    const bairro = null;
+    const cidadeuf = null;
+    const cep = null;
+    const pais = null;
+    const rua = null;
+
+    // Criptografa a senha do usuário
+    const hashedSenha = await bcrypt.hash(senha, 10);
+
+    try {
+        // Insere os dados na tabela, com campos não fornecidos como null
+        const novaConta = await db.one(
+            `INSERT INTO contas (nome, senha, datanascimento, email, cpf, telefonecelular, sexo, bairro, cidadeuf, cep, pais, rua)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id`,
+            [nome, hashedSenha, dataNascimento, email, cpf, telefoneCelular, sexo, bairro, cidadeuf, cep, pais, rua]
+        );
+
+        // Envia os dados para a API do Asaas após a criação da conta
+        const resultadoAsaas = await enviarParaAsaas({ nome, cpf });
+
+        return { id: novaConta.id, asaas: resultadoAsaas };
+    } catch (error) {
+        throw error;
+    }
 }
 
-// Função para enviar apenas o nome e o CPF do cliente para o Asaas
+// Função para enviar os dados do cliente para o Asaas
 async function enviarParaAsaas(cliente) {
   const url = 'https://sandbox.asaas.com/api/v3/customers';
   const options = {
@@ -45,7 +54,7 @@ async function enviarParaAsaas(cliente) {
   try {
     const response = await fetch(url, options);
     const json = await response.json();
-    
+
     // Verifica se a resposta foi bem-sucedida
     if (!response.ok) {
       throw new Error(`Erro ao enviar para Asaas: ${json.message}`);
@@ -57,10 +66,6 @@ async function enviarParaAsaas(cliente) {
     throw err;
   }
 }
-
-
-
-
 
 
 
