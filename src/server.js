@@ -5,6 +5,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import compression from 'compression';
 import validateApiKey from './middleware.js';
+import Pusher from 'pusher';
 
 import { obterPDF } from './modules/pdf/getPdf.js';
 import { obterTodosPDFs } from './modules/pdf/getAllPdf.js';
@@ -28,7 +29,13 @@ import { obterTodosProdutosV2 } from "./modules/produtos/getProdutos2.js";
 import { createProdutoV2 } from "./modules/produtos/postProdutos2.js";
 import { postPagamento } from "./modules/pagamento/postPagamento.js"
 const app = express();
-
+const pusher = new Pusher({
+  appId: '1871684',
+  key: '24965af3729f79c3ae48',
+  secret: '9fd4d82a58106d6a6ac5',
+  cluster: 'sa1',
+  useTLS: true
+});
 
 
 // Obter o diretório atual
@@ -291,14 +298,22 @@ app.get('/contas', async (req, res) => {
 
 app.post('/webhook/asaas', (req, res) => {
   const { event, payment } = req.body;
-    console.log(req.body);
-  
+
   if (event === 'PAYMENT_RECEIVED') {
     const paymentId = payment.id;
     const clientId = payment.customer;
+    const value = payment.value;
     
-    // Atualize o status da compra no banco de dados
-    updatePaymentStatus(clientId, paymentId, 'confirmed');
+    // Atualiza o status da compra no banco de dados (função simulada)
+    // updatePaymentStatus(clientId, paymentId, 'confirmed');
+
+    // Enviar dados para o front-end via Pusher
+    pusher.trigger('payments-channel', 'payment-confirmed', {
+      clientId: clientId,
+      paymentId: paymentId,
+      value: value,
+      status: 'confirmed'
+    });
 
     res.status(200).send('OK');
   } else {
