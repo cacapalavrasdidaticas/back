@@ -6,8 +6,8 @@ async function buscarCliente(clientId) {
         const query = 'SELECT * FROM contas WHERE id = $1'; // Ajuste conforme a sua tabela de contas
         const result = await db.query(query, [clientId]);
 
-        if (result.rows.length > 0) {
-            return result.rows[0]; // Retorna o cliente
+        if (result) {
+            return result; // Retorna o cliente
         } else {
             throw new Error('Cliente não encontrado');
         }
