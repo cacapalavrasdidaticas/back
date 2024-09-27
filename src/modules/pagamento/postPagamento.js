@@ -20,7 +20,7 @@ async function processarPagamento({ cpf, billingType, value, dueDate, descriptio
 }
 
 // Função para buscar o cliente com base no CPF
-async function postPagamento(cpf) {
+async function buscarClientePorCpf(cpf) { 
   const url = 'https://sandbox.asaas.com/api/v3/customers';
   const options = {
     method: 'GET',
