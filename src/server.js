@@ -28,6 +28,7 @@ import { obterTodasContas } from "./modules/login/getContas.js";
 import { obterTodosProdutosV2 } from "./modules/produtos/getProdutos2.js";
 import { createProdutoV2 } from "./modules/produtos/postProdutos2.js";
 import { postPagamento } from "./modules/pagamento/postPagamento.js"
+import { buscarCliente, buscarProduto } from './modules/pagamento/enviarDados.js';
 const app = express();
 const pusher = new Pusher({
   appId: '1871684',
@@ -368,6 +369,35 @@ app.post('/payment/:cpf', async (req, res) => {
     } catch (error) {
         console.error("Erro ao processar pagamento:", error);
         res.status(500).json({ error: "Erro ao processar pagamento" });
+    }
+});
+
+
+app.post('/send-product-ids', async (req, res) => {
+    const { productIds, clientId, paymentId } = req.body; // Captura os dados enviados no body
+
+    try {
+        // Buscar o cliente na tabela de contas
+        const cliente = await buscarCliente(clientId);
+        console.log('Dados do cliente:', cliente);
+
+        // Buscar todos os produtos baseados nos IDs fornecidos
+        const produtos = await Promise.all(
+            productIds.map(async (id) => {
+                return await buscarProduto(id); // Busca o produto por ID
+            })
+        );
+
+        console.log('Produtos encontrados:', produtos);
+
+        // Retorna os dados do cliente e dos produtos
+        res.status(200).json({
+            cliente,
+            produtos
+        });
+    } catch (error) {
+        console.error("Erro ao processar a requisição:", error);
+        res.status(500).json({ error: "Erro ao processar a requisição" });
     }
 });
 
