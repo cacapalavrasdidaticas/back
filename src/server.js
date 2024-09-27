@@ -298,6 +298,7 @@ app.get('/contas', async (req, res) => {
 
 app.post('/webhook/asaas', (req, res) => {
   const { event, payment } = req.body;
+  console.log(event,"pagamento do asaas")
 
   if (event === 'PAYMENT_RECEIVED') {
     const paymentId = payment.id;
