@@ -54,6 +54,7 @@ async function enviarParaAsaas(cliente) {
   try {
     const response = await fetch(url, options);
     const json = await response.json();
+      console.log(response)
 
     // Verifica se a resposta foi bem-sucedida
     if (!response.ok) {
