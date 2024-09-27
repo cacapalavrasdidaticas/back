@@ -1,6 +1,6 @@
 import db from "../../db.js";
 import bcrypt from "bcrypt";
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
 // Função para criar conta
 export async function criarConta(usuario) {
