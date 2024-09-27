@@ -26,6 +26,7 @@ import { deleteProduto } from "./modules/produtos/deleteProdutos.js";
 import { obterTodasContas } from "./modules/login/getContas.js";
 import { obterTodosProdutosV2 } from "./modules/produtos/getProdutos2.js";
 import { createProdutoV2 } from "./modules/produtos/postProdutos2.js";
+import { postPagamento } from "./modules/pagamento/postPagamento.js"
 const app = express();
 
 
@@ -303,6 +304,30 @@ app.post('/webhook/asaas', (req, res) => {
   } else {
     res.status(400).send('Event not handled');
   }
+});
+
+app.post('/payment/:cpf', async (req, res) => {
+    const cpf = req.params.cpf; // Captura o CPF da URL
+    const { billingType, value, dueDate, description, idProduto, idUsuario } = req.body; // Captura os dados de pagamento
+
+    try {
+        // Processa o pagamento com os dados recebidos
+        const resultadoPagamento = await postPagamento({
+            cpf,
+            billingType,
+            value,
+            dueDate,
+            description,
+            idProduto,
+            idUsuario
+        });
+
+        // Retorna sucesso após processar o pagamento
+        res.status(201).json({ message: "Pagamento realizado com sucesso", resultado: resultadoPagamento });
+    } catch (error) {
+        console.error("Erro ao processar pagamento:", error);
+        res.status(500).json({ error: "Erro ao processar pagamento" });
+    }
 });
 
 
