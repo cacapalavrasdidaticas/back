@@ -26,7 +26,7 @@ async function buscarClientePorCpf(cpf) {
     method: 'GET',
     headers: {
       accept: 'application/json',
-      access_token: 'SEU_TOKEN_AQUI', // Substitua pelo token correto
+      access_token: '$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwODk3NDE6OiRhYWNoXzJmZmFkNjFiLWMzZDQtNDE5Ny05YTI3LWZlZjM3Y2NhY2RlMg==', // Substitua pelo token correto
     },
   };
 
@@ -57,7 +57,7 @@ async function enviarPagamento({ customer, billingType, value, dueDate, descript
     headers: {
       accept: 'application/json',
       'content-type': 'application/json',
-      access_token: 'SEU_TOKEN_AQUI', // Substitua pelo token correto
+      access_token: '$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwODk3NDE6OiRhYWNoXzJmZmFkNjFiLWMzZDQtNDE5Ny05YTI3LWZlZjM3Y2NhY2RlMg==', // Substitua pelo token correto
     },
     body: JSON.stringify({
       billingType,
