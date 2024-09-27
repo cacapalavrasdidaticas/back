@@ -298,22 +298,39 @@ app.get('/contas', async (req, res) => {
 
 app.post('/webhook/asaas', (req, res) => {
   const { event, payment } = req.body;
-  console.log(event,"pagamento do asaas")
 
-  if (event === 'PAYMENT_RECEIVED') {
+  if (event === 'PAYMENT_CONFIRMED') {
     const paymentId = payment.id;
     const clientId = payment.customer;
     const value = payment.value;
-    
-    // Atualiza o status da compra no banco de dados (função simulada)
-    console.log('Pagamento recebido:', { paymentId, clientId, value });
+    const billingType = payment.billingType;
+    const description = payment.description;
+    const invoiceUrl = payment.invoiceUrl;
+    const transactionReceiptUrl = payment.transactionReceiptUrl;
+    const status = payment.status;
+
+    // Log dos dados recebidos
+    console.log('Pagamento confirmado:', {
+      paymentId,
+      clientId,
+      value,
+      billingType,
+      description,
+      invoiceUrl,
+      transactionReceiptUrl,
+      status
+    });
 
     // Enviar dados para o front-end via Pusher
     pusher.trigger('payments-channel', 'payment-confirmed', {
-      clientId: clientId,
-      paymentId: paymentId,
-      value: value,
-      status: 'confirmed'
+      clientId,
+      paymentId,
+      value,
+      billingType,
+      description,
+      invoiceUrl,
+      transactionReceiptUrl,
+      status
     }, (error, request, response) => {
       if (error) {
         console.error('Erro ao disparar evento Pusher:', error);
@@ -327,6 +344,7 @@ app.post('/webhook/asaas', (req, res) => {
     res.status(400).send('Event not handled');
   }
 });
+
 
 
 app.post('/payment/:cpf', async (req, res) => {
