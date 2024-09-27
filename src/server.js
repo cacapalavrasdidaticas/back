@@ -315,6 +315,8 @@ app.post('/webhook/asaas', (req, res) => {
       status: 'confirmed'
     });
 
+    console.log(res, "dados push")
+
     res.status(200).send('OK');
   } else {
     res.status(400).send('Event not handled');
