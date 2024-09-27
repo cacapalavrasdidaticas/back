@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 
 // Função para processar pagamento
-async function processarPagamento({ cpf, billingType, value, dueDate, description }) {
+export async function postPagamento({ cpf, billingType, value, dueDate, description }) {
   // Primeira etapa: Listar clientes e encontrar pelo CPF
   const customerId = await buscarClientePorCpf(cpf);
 
@@ -20,13 +20,13 @@ async function processarPagamento({ cpf, billingType, value, dueDate, descriptio
 }
 
 // Função para buscar o cliente com base no CPF
-async function buscarClientePorCpf(cpf) { 
+async function buscarClientePorCpf(cpf) {
   const url = 'https://sandbox.asaas.com/api/v3/customers';
   const options = {
     method: 'GET',
     headers: {
       accept: 'application/json',
-      access_token: '$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwODk3NDE6OiRhYWNoXzJmZmFkNjFiLWMzZDQtNDE5Ny05YTI3LWZlZjM3Y2NhY2RlMg==', // Substitua pelo token correto
+      access_token: 'SEU_TOKEN_AQUI', // Substitua pelo token correto
     },
   };
 
@@ -57,7 +57,7 @@ async function enviarPagamento({ customer, billingType, value, dueDate, descript
     headers: {
       accept: 'application/json',
       'content-type': 'application/json',
-      access_token: '$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwODk3NDE6OiRhYWNoXzJmZmFkNjFiLWMzZDQtNDE5Ny05YTI3LWZlZjM3Y2NhY2RlMg==', // Substitua pelo token correto
+      access_token: 'SEU_TOKEN_AQUI', // Substitua pelo token correto
     },
     body: JSON.stringify({
       billingType,
@@ -83,6 +83,3 @@ async function enviarPagamento({ customer, billingType, value, dueDate, descript
     throw err;
   }
 }
-
-// Exportando a função processarPagamento
-export default processarPagamento;
