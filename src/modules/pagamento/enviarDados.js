@@ -1,4 +1,4 @@
-import db from './db'; // Supondo que você tenha uma conexão com o banco de dados configurada
+import db from "../../db.js";
 
 // Função para buscar um cliente na tabela de contas
 async function buscarCliente(clientId) {
