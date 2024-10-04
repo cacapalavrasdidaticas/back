@@ -7,15 +7,14 @@
   "scripts": {
     "dev": "node --watch src/server.js"
   },
-  "dependencies": {
-     "adm-zip": "^0.5.16",
+ "dependencies": {
+    "adm-zip": "^0.5.16",
     "archiver": "^7.0.1",
     "archiver-zip-encrypted": "^2.0.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "fs": "^0.0.1-security",
     "hummus": "^1.0.117",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
@@ -28,6 +27,6 @@
     "pusher": "^5.2.0",
     "ws": "^8.18.0",
     "zip-lib": "^1.0.4",
-    "compression": "^1.7.4",
+    "compression": "^1.7.4"
   }
 }
