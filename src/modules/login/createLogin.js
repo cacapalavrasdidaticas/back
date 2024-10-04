@@ -1,11 +1,16 @@
 import db from "../../db.js";
 import bcrypt from "bcrypt";
 import fetch from 'node-fetch';
+import { loadTokens, getTokenById } from "../../tokenManager.js";
+import dotenv from 'dotenv';
 
-// Função para criar conta
+dotenv.config();
+
+await loadTokens();
+
 export async function criarConta(usuario) {
     const { nome, dataNascimento, email, cpf, telefoneCelular, senha } = usuario;
-    
+
     const sexo = null;
     const bairro = null;
     const cidadeuf = null;
@@ -22,7 +27,6 @@ export async function criarConta(usuario) {
             [nome, hashedSenha, dataNascimento, email, cpf, telefoneCelular, sexo, bairro, cidadeuf, cep, pais, rua]
         );
 
-        // Envia os dados para a API do Asaas após a criação da conta
         const resultadoAsaas = await enviarParaAsaas({ nome, cpf });
 
         return { id: novaConta.id, asaas: resultadoAsaas };
@@ -31,10 +35,11 @@ export async function criarConta(usuario) {
     }
 }
 
-// Função para enviar os dados do cliente para o Asaas
 async function enviarParaAsaas(cliente) {
-  const url = 'https://sandbox.asaas.com/api/v3/customers';
-  
+  const url = process.env.ASAAS_SANDBOX_API_URL;
+
+  const token = getTokenById(1);
+
   const body = {
     name: cliente.nome,
     cpfCnpj: cliente.cpf
@@ -45,7 +50,7 @@ async function enviarParaAsaas(cliente) {
     headers: {
       accept: 'application/json',
       'content-type': 'application/json',
-      access_token: '$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwODk3NDE6OiRhYWNoXzJmZmFkNjFiLWMzZDQtNDE5Ny05YTI3LWZlZjM3Y2NhY2RlMg==', // Substitua pelo token correto
+      access_token: token,
     },
     body: JSON.stringify(body),
   };
@@ -54,10 +59,8 @@ async function enviarParaAsaas(cliente) {
     const response = await fetch(url, options);
     const json = await response.json();
 
-    // Log da resposta do Asaas para depuração
     console.log('Resposta do Asaas:', json);
 
-    // Verifica se a resposta foi bem-sucedida
     if (!response.ok) {
       throw new Error(`Erro ao enviar para Asaas: ${json.message || 'Erro desconhecido'}`);
     }
@@ -68,45 +71,3 @@ async function enviarParaAsaas(cliente) {
     throw err;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import db from "../../db.js";
-// import bcrypt from "bcrypt";
-
-// export async function criarConta(usuario) {
-//     const { nome, sexo, dataNascimento, email, cpf, telefoneCelular, endereco, senha } = usuario;
-//     const hashedSenha = await bcrypt.hash(senha, 10);
-
-//     try {
-//         const novaConta = await db.one(
-//             `INSERT INTO contas (nome, sexo, dataNascimento, email, cpf, telefoneCelular, endereco, senha)
-//              VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
-//             [nome, sexo, dataNascimento, email, cpf, telefoneCelular, endereco, hashedSenha]
-//         );
-
-//         return { id: novaConta.id };
-//     } catch (error) {
-//         throw error;
-//     }
-// }
