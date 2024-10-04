@@ -1,4 +1,8 @@
 import fetch from 'node-fetch';
+import dotenv from 'dotenv';
+import { loadTokens, getTokenById } from "../../tokenManager.js";
+
+dotenv.config();
 
 // Função para processar pagamento
 export async function postPagamento({ cpf, billingType, value, dueDate, description }) {
@@ -21,12 +25,14 @@ export async function postPagamento({ cpf, billingType, value, dueDate, descript
 
 // Função para buscar o cliente com base no CPF
 async function buscarClientePorCpf(cpf) {
-  const url = 'https://sandbox.asaas.com/api/v3/customers';
+    const url = process.env.ASAAS_SANDBOX_API_URL;
+    const token = getTokenById(1);
+
   const options = {
     method: 'GET',
     headers: {
       accept: 'application/json',
-      access_token: '$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwODk3NDE6OiRhYWNoXzJmZmFkNjFiLWMzZDQtNDE5Ny05YTI3LWZlZjM3Y2NhY2RlMg==', // Substitua pelo token correto
+      access_token: token
     },
   };
 
@@ -51,13 +57,15 @@ async function buscarClientePorCpf(cpf) {
 
 // Função para enviar as informações de pagamento
 async function enviarPagamento({ customer, billingType, value, dueDate, description }) {
-  const url = 'https://sandbox.asaas.com/api/v3/payments';
+    const url = process.env.ASAAS_SANDBOX_API_URL;
+    const token = getTokenById(1);
+
   const options = {
     method: 'POST',
     headers: {
       accept: 'application/json',
       'content-type': 'application/json',
-      access_token: '$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwODk3NDE6OiRhYWNoXzJmZmFkNjFiLWMzZDQtNDE5Ny05YTI3LWZlZjM3Y2NhY2RlMg==', // Substitua pelo token correto
+      access_token: token
     },
     body: JSON.stringify({
       billingType,
