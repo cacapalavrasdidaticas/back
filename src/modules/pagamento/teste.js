@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 import archiver from 'archiver';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { obterProduto } from '../produtos/getProdutoId.js';
+import { obterProduto } from '../produtos/getProdutoIdV2.js';
 import { buscarContas } from '../login/getAccount.js';
 import archiverZipEncrypted from 'archiver-zip-encrypted';
 
