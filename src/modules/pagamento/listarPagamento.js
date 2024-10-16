@@ -6,7 +6,7 @@ dotenv.config();
 
 // Função para buscar pagamentos
 export async function getPagamentos() {
-  const url = `${process.env.ASAAS_SANDBOX_PAYMENTS_API_URL}`; // Certifique-se que o URL está correto
+  const url = "https://sandbox.asaas.com/api/v3/payments"; // Certifique-se que o URL está correto
   const token = getTokenById(1); // Assumindo que o token é o mesmo do post
 
   const options = {
