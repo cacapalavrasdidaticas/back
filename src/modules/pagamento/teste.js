@@ -112,7 +112,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
     let mailOptions = {
       from: 'palavrasdidaticas@gmail.com',
       // to: clienteEmail,
-      to: "anderson_felipetavares@hotmail.com,
+      to: "anderson_felipetavares@hotmail.com",
       subject: 'Produtos adquiridos',
       html: `
         <p>Olá, ${clienteInfo.nome},</p>
