@@ -80,8 +80,10 @@ async function enviarPagamento({ customer, billingType, value, dueDate, descript
     const response = await fetch(url, options);
     const json = await response.json();
 
+    console.log(json, 'dados da api')
+
     // Verifica se a resposta foi bem-sucedida
-    if (!response) {
+    if (!response.ok) {
       throw new Error(`Erro ao processar pagamento: ${json.message || 'Erro desconhecido'}`);
     }
 
