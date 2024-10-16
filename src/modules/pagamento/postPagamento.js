@@ -61,7 +61,7 @@ async function buscarClientePorCpf(cpf) {
 
 // Função para enviar as informações de pagamento
 async function enviarPagamento({ customer, billingType, value, dueDate, description }) {
-    const url = "https://sandbox.asaas.com/api/v3/customers";
+    const url = "https://sandbox.asaas.com/api/v3/payments/";
     const token = getTokenById(1).token;
 
   const options = {
