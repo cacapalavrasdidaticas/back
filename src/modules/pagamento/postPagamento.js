@@ -50,6 +50,8 @@ async function buscarClientePorCpf(cpf) {
     // Encontra o cliente cujo CPF corresponde ao fornecido
     const cliente = json.data.find(cliente => cliente.cpfCnpj === cpf);
 
+    console.log(cliente, 'dados da api depois')
+
     return cliente ? cliente.id : null;
   } catch (err) {
     console.error('Erro ao listar clientes:', err);
