@@ -119,7 +119,8 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
     let mailOptions = {
       from: 'palavrasdidaticas@gmail.com',
       // Para enviar para o cliente real, use o email do cliente
-      to: clienteEmail, // ou "anderson_felipetavares@hotmail.com" para testes
+      // to: clienteEmail,
+      to: "anderson_felipetavares@hotmail.com",
       subject: 'Produtos adquiridos',
       html: `
         <p>Olá, ${clienteInfo.nome},</p>
