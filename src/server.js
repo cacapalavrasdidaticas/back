@@ -29,6 +29,7 @@ import { obterTodosProdutosV2 } from "./modules/produtos/getProdutos2.js";
 import { createProdutoV2 } from "./modules/produtos/postProdutos2.js";
 import { postPagamento } from "./modules/pagamento/postPagamento.js"
 import { buscarCliente, buscarProduto } from './modules/pagamento/enviarDados.js';
+import { getPagamentos } from "./modules/pagamento/listarPagamento.js";
 const app = express();
 const pusher = new Pusher({
   appId: '1871684',
@@ -398,6 +399,16 @@ app.post('/send-product-ids', async (req, res) => {
     } catch (error) {
         console.error("Erro ao processar a requisição:", error);
         res.status(500).json({ error: "Erro ao processar a requisição" });
+    }
+});
+
+app.get('/list-payments', async (req, res) => {
+    try {
+        const pagamentos = await getPagamentos();
+        res.status(200).json(pagamentos);
+    } catch (error) {
+        console.error("Erro ao buscar produtos:", error);
+        res.status(500).json({ error: "Erro ao buscar produtos" });
     }
 });
 
