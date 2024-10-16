@@ -1,23 +1,38 @@
 import nodemailer from 'nodemailer';
 import archiver from 'archiver';
 import path from 'path';
-import { fileURLToPath } from 'url'; // Importação necessária para resolver __dirname
+import { fileURLToPath } from 'url';
 import { obterProduto } from '../produtos/getProdutoId.js';
 import { buscarContas } from '../login/getAccount.js';
 import archiverZipEncrypted from 'archiver-zip-encrypted';
 
-// Registrar o formato 'zip-encrypted' no archiver
-archiver.registerFormat('zip-encrypted', archiverZipEncrypted);
+const MAX_ATTEMPTS = 5; // Limite de tentativas de busca
+const WAIT_TIME_MS = 2000; // Tempo de espera entre tentativas (2 segundos)
 
-// Resolver __dirname
+archiver.registerFormat('zip-encrypted', archiverZipEncrypted);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Função que faz polling para aguardar até que o PDF esteja disponível
+async function aguardarPDF(idProduto, tentativas = 0) {
+  const produto = await obterProduto(idProduto);
+
+  if (produto && produto.pdf && Buffer.isBuffer(produto.pdf)) {
+    return produto;
+  } else if (tentativas >= MAX_ATTEMPTS) {
+    throw new Error(`PDF para o produto com ID ${idProduto} não está disponível após ${MAX_ATTEMPTS} tentativas.`);
+  } else {
+    console.log(`Tentativa ${tentativas + 1}: PDF para o produto com ID ${idProduto} não disponível. Aguardando...`);
+    await new Promise(resolve => setTimeout(resolve, WAIT_TIME_MS)); // Aguardar antes da próxima tentativa
+    return aguardarPDF(idProduto, tentativas + 1); // Tentar novamente
+  }
+}
 
 export async function processarEEnviarEmail(productIds, clientId, paymentId) {
   try {
     console.log("Iniciando o processamento do e-mail...");
 
-    // 1. Buscar o cliente pelo ID e verificar o retorno
+    // 1. Buscar o cliente pelo ID
     const cliente = await buscarContas(clientId);
     if (!cliente || cliente.usuario.length === 0) {
       throw new Error('Cliente não encontrado.');
@@ -31,18 +46,11 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
 
     console.log(`Cliente encontrado: ${clienteInfo.nome} (${clienteEmail})`);
 
-    // 2. Buscar os produtos pelo array de IDs fornecido
+    // 2. Buscar os produtos e aguardar que os PDFs estejam disponíveis
     const produtos = await Promise.all(
       productIds.map(async (id) => {
         console.log(`Buscando produto com ID: ${id}`);
-        const produto = await obterProduto(id);
-
-        if (!produto) {
-          console.warn(`Produto com ID ${id} não foi encontrado.`);
-          return null;
-        }
-
-        return produto;
+        return aguardarPDF(id); // Aguardar até que o PDF esteja disponível
       })
     );
 
@@ -53,7 +61,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
       throw new Error('Nenhum produto válido encontrado para os IDs fornecidos.');
     }
 
-    // 3. Gerar PDFs para cada produto e adicionar ao arquivo ZIP diretamente em memória
+    // 3. Gerar o arquivo ZIP com os PDFs
     const archive = archiver('zip-encrypted', {
       zlib: { level: 9 },
       encryptionMethod: 'aes256',
@@ -68,11 +76,6 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
 
     // Adicionar cada PDF ao arquivo ZIP
     produtosValidos.forEach((produto) => {
-      if (!produto.pdf || !Buffer.isBuffer(produto.pdf)) {
-        console.warn(`PDF para o produto com ID ${produto.id} não encontrado ou inválido. Produto será ignorado.`);
-        return; // Ignora o produto se o PDF não for válido
-      }
-
       console.log(`Adicionando PDF do produto ID ${produto.id} ao ZIP.`);
       archive.append(produto.pdf, { name: `produto_${produto.id}.pdf` });
     });
@@ -91,7 +94,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
       service: 'gmail',
       auth: {
         user: 'palavrasdidaticas@gmail.com',
-        pass: 'hqikugaoocmzrhld', // Use a senha do aplicativo ou a senha correta
+        pass: 'hqikugaoocmzrhld',
       },
     });
 
@@ -109,7 +112,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
     let mailOptions = {
       from: 'palavrasdidaticas@gmail.com',
       // to: clienteEmail,
-      to: "anderson_felipetavares@hotmail.com",
+      to: "anderson_felipetavares@hotmail.com,
       subject: 'Produtos adquiridos',
       html: `
         <p>Olá, ${clienteInfo.nome},</p>
@@ -125,9 +128,9 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
           contentType: 'application/zip',
         },
         {
-          filename: 'Logo.svg', // Certifique-se de que o caminho para a logo está correto
-          path: path.join(__dirname, '../../assets/img/Logo.svg'), // Aqui usa o 'path' com __dirname resolvido
-          cid: 'logo', // Definir cid para usar no HTML
+          filename: 'Logo.svg',
+          path: path.join(__dirname, '../../assets/img/Logo.svg'),
+          cid: 'logo',
         },
       ],
     };
