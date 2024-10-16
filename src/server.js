@@ -299,54 +299,101 @@ app.get('/contas', async (req, res) => {
     }
 });
 
-app.post('/webhook/asaas', (req, res) => {
+// app.post('/webhook/asaas', (req, res) => {
+//   const { event, payment } = req.body;
+
+//   if (event === 'PAYMENT_CONFIRMED') {
+//     const paymentId = payment.id;
+//     const clientId = payment.customer;
+//     const value = payment.value;
+//     const billingType = payment.billingType;
+//     const description = payment.description;
+//     const invoiceUrl = payment.invoiceUrl;
+//     const transactionReceiptUrl = payment.transactionReceiptUrl;
+//     const status = payment.status;
+
+//     // Log dos dados recebidos
+//     console.log('Pagamento confirmado:', {
+//       paymentId,
+//       clientId,
+//       value,
+//       billingType,
+//       description,
+//       invoiceUrl,
+//       transactionReceiptUrl,
+//       status
+//     });
+
+//     // Enviar dados para o front-end via Pusher
+//     pusher.trigger('payments-channel', 'payment-confirmed', {
+//       clientId,
+//       paymentId,
+//       value,
+//       billingType,
+//       description,
+//       invoiceUrl,
+//       transactionReceiptUrl,
+//       status
+//     }, (error, request, response) => {
+//       if (error) {
+//         console.error('Erro ao disparar evento Pusher:', error);
+//       } else {
+//         console.log('Evento disparado com sucesso:', response);
+//       }
+//     });
+
+//     res.status(200).send('OK');
+//   } else {
+//     res.status(200).send('Event not handled');
+//   }
+// });
+
+function sendPusherNotification(data, retries = 3) {
+  return new Promise((resolve, reject) => {
+    pusher.trigger('payments-channel', 'payment-confirmed', data, (error, request, response) => {
+      if (error) {
+        console.error('Erro ao disparar evento Pusher:', error);
+        if (retries > 0) {
+          console.log(`Tentando novamente... (${3 - retries + 1})`);
+          return resolve(sendPusherNotification(data, retries - 1));
+        } else {
+          return reject(new Error('Falha ao disparar evento Pusher após múltiplas tentativas'));
+        }
+      }
+      console.log('Evento disparado com sucesso:', response);
+      resolve(response);
+    });
+  });
+}
+
+app.post('/webhook/asaas', async (req, res) => {
   const { event, payment } = req.body;
 
   if (event === 'PAYMENT_CONFIRMED') {
-    const paymentId = payment.id;
-    const clientId = payment.customer;
-    const value = payment.value;
-    const billingType = payment.billingType;
-    const description = payment.description;
-    const invoiceUrl = payment.invoiceUrl;
-    const transactionReceiptUrl = payment.transactionReceiptUrl;
-    const status = payment.status;
+    const data = {
+      clientId: payment.customer,
+      paymentId: payment.id,
+      value: payment.value,
+      billingType: payment.billingType,
+      description: payment.description,
+      invoiceUrl: payment.invoiceUrl,
+      transactionReceiptUrl: payment.transactionReceiptUrl,
+      status: payment.status
+    };
 
-    // Log dos dados recebidos
-    console.log('Pagamento confirmado:', {
-      paymentId,
-      clientId,
-      value,
-      billingType,
-      description,
-      invoiceUrl,
-      transactionReceiptUrl,
-      status
-    });
-
-    // Enviar dados para o front-end via Pusher
-    pusher.trigger('payments-channel', 'payment-confirmed', {
-      clientId,
-      paymentId,
-      value,
-      billingType,
-      description,
-      invoiceUrl,
-      transactionReceiptUrl,
-      status
-    }, (error, request, response) => {
-      if (error) {
-        console.error('Erro ao disparar evento Pusher:', error);
-      } else {
-        console.log('Evento disparado com sucesso:', response);
-      }
-    });
-
-    res.status(200).send('OK');
+    try {
+      // Enviar dados para o front-end via Pusher com tentativas
+      await sendPusherNotification(data);
+      res.status(200).send('OK');
+    } catch (err) {
+      console.error('Erro ao enviar notificação:', err);
+      res.status(500).send('Erro ao processar pagamento');
+    }
   } else {
-    res.status(500).send('Event not handled');
+    res.status(200).send('Event not handled');
   }
 });
+
 
 
 
