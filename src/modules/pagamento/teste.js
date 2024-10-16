@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 import archiver from 'archiver';
 import { obterProduto } from '../produtos/getProdutoId.js';
-import { buscarContas } from '../login/getContasId.js';
+import { buscarContas } from '../login/getAccount.js';
 import archiverZipEncrypted from 'archiver-zip-encrypted';
 
 // Registrar o formato 'zip-encrypted' no archiver
