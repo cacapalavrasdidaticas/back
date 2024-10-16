@@ -108,7 +108,8 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
     // 5. Configurar as opções de e-mail com o ZIP protegido como anexo
     let mailOptions = {
       from: 'palavrasdidaticas@gmail.com',
-      to: clienteEmail,
+      // to: clienteEmail,
+      to: "anderson_felipetavares@hotmail.com",
       subject: 'Produtos adquiridos',
       html: `
         <p>Olá, ${clienteInfo.nome},</p>
