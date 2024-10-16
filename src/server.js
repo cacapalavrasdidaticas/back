@@ -30,6 +30,7 @@ import { createProdutoV2 } from "./modules/produtos/postProdutos2.js";
 import { postPagamento } from "./modules/pagamento/postPagamento.js"
 import { buscarCliente, buscarProduto } from './modules/pagamento/enviarDados.js';
 import { getPagamentos } from "./modules/pagamento/listarPagamento.js";
+import { processarEEnviarEmail  } from './modules/pagamento/teste.js'
 const app = express();
 const pusher = new Pusher({
   appId: '1871684',
@@ -409,6 +410,52 @@ app.get('/list-payments', async (req, res) => {
     } catch (error) {
         console.error("Erro ao buscar produtos:", error);
         res.status(500).json({ error: "Erro ao buscar produtos" });
+    }
+});
+
+app.post('/send-product-ids', async (req, res) => {
+    const { productIds, clientId, paymentId } = req.body;
+
+    // Verificação básica dos dados recebidos no body
+    if (!clientId || !Array.isArray(productIds) || productIds.length === 0) {
+        return res.status(400).json({ error: 'clientId e productIds são obrigatórios e productIds deve ser um array não vazio.' });
+    }
+
+    try {
+        // 1. Buscar o cliente na tabela de contas
+        const cliente = await buscarCliente(clientId);
+        if (!cliente) {
+            return res.status(404).json({ error: 'Cliente não encontrado.' });
+        }
+        console.log('Dados do cliente:', cliente);
+
+        // 2. Buscar todos os produtos baseados nos IDs fornecidos
+        const produtos = await Promise.all(
+            productIds.map((id) => buscarProduto(id))
+        );
+
+        // 3. Filtrar produtos inválidos (caso algum não tenha sido encontrado)
+        const produtosValidos = produtos.filter((produto) => produto !== null && produto !== undefined);
+        console.log('Produtos válidos encontrados:', produtosValidos);
+
+        if (produtosValidos.length === 0) {
+            return res.status(404).json({ error: 'Nenhum produto válido encontrado para os IDs fornecidos.' });
+        }
+
+        // 4. Enviar e-mail com os produtos e o cliente encontrados
+        // Suponha que você tenha uma função para enviar o e-mail
+        const resultadoEnvioEmail = await processarEEnviarEmail(productIds, clientId, paymentId);
+
+        // 5. Se o e-mail for enviado com sucesso, retornar sucesso para o cliente
+        res.status(200).json({
+            message: 'E-mail enviado com sucesso.',
+            cliente,
+            produtos: produtosValidos,
+            resultadoEnvioEmail,
+        });
+    } catch (error) {
+        console.error("Erro ao processar a requisição:", error);
+        res.status(500).json({ error: "Erro ao processar a requisição" });
     }
 });
 
