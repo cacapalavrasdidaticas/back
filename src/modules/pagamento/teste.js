@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 import archiver from 'archiver';
 import { obterProduto } from '../produtos/getProdutoId.js';
-import { buscarContas } from '../login/getAccount.js';
+import { buscarContas } from '../login/getContasId.js';
 import archiverZipEncrypted from 'archiver-zip-encrypted';
 
 // Registrar o formato 'zip-encrypted' no archiver
@@ -47,34 +47,23 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
       throw new Error('Nenhum produto válido encontrado para os IDs fornecidos.');
     }
 
-    // 3. Gerar PDFs para cada produto e criar o ZIP em memória
+    // 3. Gerar PDFs para cada produto e adicionar ao arquivo ZIP diretamente em memória
     const archive = archiver('zip-encrypted', {
       zlib: { level: 9 },
       encryptionMethod: 'aes256',
       password: zipPassword,
     });
 
-    // Armazenar os dados ZIP em buffers em vez de gravar no disco
     const buffers = [];
     archive.on('data', (data) => buffers.push(data));
-
-    // Gerenciar eventos de erro
     archive.on('error', (err) => {
       throw err;
     });
 
     // Adicionar cada PDF ao arquivo ZIP
     produtosValidos.forEach((produto) => {
-      if (!produto.pdf) {
-        console.error(`Erro: O campo PDF para o produto com ID ${produto.id} está vazio ou indefinido.`);
-        throw new Error(`PDF para o produto com ID ${produto.id} não encontrado no banco de dados.`);
-      }
-
-      console.log(`Verificando tipo de PDF para o produto ID ${produto.id}:`, typeof produto.pdf);
-
-      if (!(produto.pdf instanceof Buffer)) {
-        console.error(`Erro: O PDF do produto com ID ${produto.id} não é um Buffer válido.`);
-        throw new Error(`PDF para o produto com ID ${produto.id} não é um Buffer válido.`);
+      if (!produto.pdf || !Buffer.isBuffer(produto.pdf)) {
+        throw new Error(`PDF para o produto com ID ${produto.id} não encontrado no banco de dados ou não é um Buffer válido.`);
       }
 
       console.log(`Adicionando PDF do produto ID ${produto.id} ao ZIP.`);
@@ -84,7 +73,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
     // Finalizar o ZIP
     await archive.finalize();
 
-    // Concatenar os buffers para criar o arquivo ZIP completo
+    // Concatenar os buffers para criar o arquivo ZIP completo em memória
     const zipBuffer = Buffer.concat(buffers);
 
     console.log('ZIP gerado em memória.');
@@ -124,7 +113,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
       attachments: [
         {
           filename: 'produtos_protegidos.zip',
-          content: zipBuffer,
+          content: zipBuffer, // Usando o Buffer gerado em memória
           contentType: 'application/zip',
         },
         {
