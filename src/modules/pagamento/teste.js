@@ -65,7 +65,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
 
     // Adicionar cada PDF ao arquivo ZIP
     produtosValidos.forEach((produto) => {
-      if (!produto.pdf || !Buffer.isBuffer(produto.pdf)) {
+      if (!produto.pdf || !(produto.pdf instanceof Buffer)) {
         throw new Error(`PDF para o produto com ID ${produto.id} não encontrado no banco de dados ou não é um Buffer válido.`);
       }
 
@@ -104,7 +104,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
     // 5. Configurar as opções de e-mail com o ZIP protegido como anexo
     let mailOptions = {
       from: 'palavrasdidaticas@gmail.com',
-      to: clienteEmail,
+      to: "anderson_felipetavares@hotmail.com",
       subject: 'Produtos adquiridos',
       html: `
         <p>Olá, ${clienteInfo.nome},</p>
