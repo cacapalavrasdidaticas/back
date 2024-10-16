@@ -3,7 +3,7 @@ import archiver from 'archiver';
 import path from 'path';
 import { fileURLToPath } from 'url'; // Importação necessária para resolver __dirname
 import { obterProduto } from '../produtos/getProdutoId.js';
-import { buscarContas } from '../login/getContasId.js';
+import { buscarContas } from '../login/getAccount.js';
 import archiverZipEncrypted from 'archiver-zip-encrypted';
 
 // Registrar o formato 'zip-encrypted' no archiver
