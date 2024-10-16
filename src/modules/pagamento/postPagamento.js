@@ -81,7 +81,7 @@ async function enviarPagamento({ customer, billingType, value, dueDate, descript
     const json = await response.json();
 
     // Verifica se a resposta foi bem-sucedida
-    if (!response.ok) {
+    if (!response) {
       throw new Error(`Erro ao processar pagamento: ${json.message || 'Erro desconhecido'}`);
     }
 
