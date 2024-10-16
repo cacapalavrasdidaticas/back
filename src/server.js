@@ -344,7 +344,7 @@ app.post('/webhook/asaas', (req, res) => {
 
     res.status(200).send('OK');
   } else {
-    res.status(200).send('Event not handled');
+    res.status(500).send('Event not handled');
   }
 });
 
