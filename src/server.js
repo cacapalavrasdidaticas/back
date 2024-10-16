@@ -375,43 +375,43 @@ app.post('/payment/:cpf', async (req, res) => {
 });
 
 
-app.post('/send-product-ids', async (req, res) => {
-    const { productIds, clientId, paymentId } = req.body; // Captura os dados enviados no body
+// app.post('/send-product-ids', async (req, res) => {
+//     const { productIds, clientId, paymentId } = req.body; // Captura os dados enviados no body
 
-    try {
-        // Buscar o cliente na tabela de contas
-        const cliente = await buscarCliente(clientId);
-        console.log('Dados do cliente:', cliente);
+//     try {
+//         // Buscar o cliente na tabela de contas
+//         const cliente = await buscarCliente(clientId);
+//         console.log('Dados do cliente:', cliente);
 
-        // Buscar todos os produtos baseados nos IDs fornecidos
-        const produtos = await Promise.all(
-            productIds.map(async (id) => {
-                return await buscarProduto(id); // Busca o produto por ID
-            })
-        );
+//         // Buscar todos os produtos baseados nos IDs fornecidos
+//         const produtos = await Promise.all(
+//             productIds.map(async (id) => {
+//                 return await buscarProduto(id); // Busca o produto por ID
+//             })
+//         );
 
-        console.log('Produtos encontrados:', produtos);
+//         console.log('Produtos encontrados:', produtos);
 
-        // Retorna os dados do cliente e dos produtos
-        res.status(200).json({
-            cliente,
-            produtos
-        });
-    } catch (error) {
-        console.error("Erro ao processar a requisição:", error);
-        res.status(500).json({ error: "Erro ao processar a requisição" });
-    }
-});
+//         // Retorna os dados do cliente e dos produtos
+//         res.status(200).json({
+//             cliente,
+//             produtos
+//         });
+//     } catch (error) {
+//         console.error("Erro ao processar a requisição:", error);
+//         res.status(500).json({ error: "Erro ao processar a requisição" });
+//     }
+// });
 
-app.get('/list-payments', async (req, res) => {
-    try {
-        const pagamentos = await getPagamentos();
-        res.status(200).json(pagamentos.data);
-    } catch (error) {
-        console.error("Erro ao buscar produtos:", error);
-        res.status(500).json({ error: "Erro ao buscar produtos" });
-    }
-});
+// app.get('/list-payments', async (req, res) => {
+//     try {
+//         const pagamentos = await getPagamentos();
+//         res.status(200).json(pagamentos.data);
+//     } catch (error) {
+//         console.error("Erro ao buscar produtos:", error);
+//         res.status(500).json({ error: "Erro ao buscar produtos" });
+//     }
+// });
 
 app.post('/send-product-ids', async (req, res) => {
     const { productIds, clientId, paymentId } = req.body;
