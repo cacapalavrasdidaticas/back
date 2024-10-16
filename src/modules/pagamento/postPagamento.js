@@ -77,7 +77,10 @@ async function enviarPagamento({ customer, billingType, value, dueDate, descript
       value,
       dueDate,
       description,
-      callback: {autoRedirect: true, successUrl: 'http://localhost:3000/Cart/:algumValor'}
+       callback: {
+      autoRedirect: true,
+      successUrl: 'https://front-end-pdf.vercel.app/Cart/:algumaCoisa'
+    }
     }),
   };
 
