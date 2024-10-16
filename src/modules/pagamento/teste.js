@@ -1,12 +1,17 @@
 import nodemailer from 'nodemailer';
 import archiver from 'archiver';
 import path from 'path';
+import { fileURLToPath } from 'url'; // Importação necessária para resolver __dirname
 import { obterProduto } from '../produtos/getProdutoId.js';
-import { buscarContas } from '../login/getAccount.js';
+import { buscarContas } from '../login/getContasId.js';
 import archiverZipEncrypted from 'archiver-zip-encrypted';
 
 // Registrar o formato 'zip-encrypted' no archiver
 archiver.registerFormat('zip-encrypted', archiverZipEncrypted);
+
+// Resolver __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export async function processarEEnviarEmail(productIds, clientId, paymentId) {
   try {
@@ -103,7 +108,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
     // 5. Configurar as opções de e-mail com o ZIP protegido como anexo
     let mailOptions = {
       from: 'palavrasdidaticas@gmail.com',
-      to: "anderson_felipetavares@hotmail.com",
+      to: clienteEmail,
       subject: 'Produtos adquiridos',
       html: `
         <p>Olá, ${clienteInfo.nome},</p>
@@ -120,7 +125,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
         },
         {
           filename: 'Logo.svg', // Certifique-se de que o caminho para a logo está correto
-          path: path.join(__dirname, '../../assets/img/Logo.svg'),
+          path: path.join(__dirname, '../../assets/img/Logo.svg'), // Aqui usa o 'path' com __dirname resolvido
           cid: 'logo', // Definir cid para usar no HTML
         },
       ],
