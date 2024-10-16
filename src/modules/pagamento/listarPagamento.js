@@ -6,7 +6,7 @@ dotenv.config();
 
 // Função para buscar pagamentos
 export async function getPagamentos() {
-  const url = "https://sandbox.asaas.com/api/v3/payments"; // Certifique-se que o URL está correto
+  const url = 'https://sandbox.asaas.com/api/v3/payments'; // Certifique-se que o URL está correto
   const token = getTokenById(1); // Assumindo que o token é o mesmo do post
 
   const options = {
@@ -19,24 +19,14 @@ export async function getPagamentos() {
 
   try {
     const response = await fetch(url, options);
+    const json = await response.json();
 
-    // Verifique o status da resposta
+    // Verifica se a resposta foi bem-sucedida
     if (!response.ok) {
-      const text = await response.text(); // Pega a resposta bruta
-      throw new Error(`Erro ao buscar pagamentos: Status ${response.status}. Resposta: ${text}`);
+      throw new Error(`Erro ao buscar pagamentos: ${json.message || 'Erro desconhecido'}`);
     }
 
-    // Verifique se há conteúdo na resposta antes de tentar parsear o JSON
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-      const json = await response.json();
-      return json; // Retorna os dados de pagamentos
-    } else {
-      const text = await response.text(); // Captura qualquer outro tipo de resposta
-      console.warn('A resposta não é JSON. Conteúdo bruto:', text);
-      return { message: 'A resposta não é um JSON válido', data: text };
-    }
-
+    return json; // Retorna os dados de pagamentos
   } catch (err) {
     console.error('Erro ao buscar pagamentos:', err);
     throw err;
