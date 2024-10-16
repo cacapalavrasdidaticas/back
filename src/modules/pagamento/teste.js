@@ -65,11 +65,16 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
 
     // Adicionar cada PDF ao arquivo ZIP
     produtosValidos.forEach((produto) => {
-      console.log(`Verificando tipo de PDF para o produto ID ${produto.id}:`, typeof produto.pdf, produto.pdf.constructor.name);
-      
-      if (!produto.pdf || !(produto.pdf instanceof Buffer)) {
+      if (!produto.pdf) {
+        console.error(`Erro: O campo PDF para o produto com ID ${produto.id} está vazio ou indefinido.`);
+        throw new Error(`PDF para o produto com ID ${produto.id} não encontrado no banco de dados.`);
+      }
+
+      console.log(`Verificando tipo de PDF para o produto ID ${produto.id}:`, typeof produto.pdf);
+
+      if (!(produto.pdf instanceof Buffer)) {
         console.error(`Erro: O PDF do produto com ID ${produto.id} não é um Buffer válido.`);
-        throw new Error(`PDF para o produto com ID ${produto.id} não encontrado no banco de dados ou não é um Buffer válido.`);
+        throw new Error(`PDF para o produto com ID ${produto.id} não é um Buffer válido.`);
       }
 
       console.log(`Adicionando PDF do produto ID ${produto.id} ao ZIP.`);
