@@ -1,18 +1,11 @@
 import nodemailer from 'nodemailer';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import archiver from 'archiver';
 import { obterProduto } from '../produtos/getProdutoId.js';
 import { buscarContas } from '../login/getAccount.js';
 import archiverZipEncrypted from 'archiver-zip-encrypted';
-// import imagem from "../../assets/img/Logo.svg"
 
 // Registrar o formato 'zip-encrypted' no archiver
 archiver.registerFormat('zip-encrypted', archiverZipEncrypted);
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 export async function processarEEnviarEmail(productIds, clientId, paymentId) {
   try {
@@ -54,22 +47,21 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
       throw new Error('Nenhum produto válido encontrado para os IDs fornecidos.');
     }
 
-    // 3. Gerar PDFs para cada produto e adicionar ao arquivo ZIP usando `archiver`
-    const zipPath = path.join(__dirname, 'produtos_protegidos.zip');
-    const output = fs.createWriteStream(zipPath);
-
+    // 3. Gerar PDFs para cada produto e criar o ZIP em memória
     const archive = archiver('zip-encrypted', {
       zlib: { level: 9 },
       encryptionMethod: 'aes256',
       password: zipPassword,
     });
 
+    // Armazenar os dados ZIP em buffers em vez de gravar no disco
+    const buffers = [];
+    archive.on('data', (data) => buffers.push(data));
+
     // Gerenciar eventos de erro
     archive.on('error', (err) => {
       throw err;
     });
-
-    archive.pipe(output);
 
     // Adicionar cada PDF ao arquivo ZIP
     produtosValidos.forEach((produto) => {
@@ -84,7 +76,10 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
     // Finalizar o ZIP
     await archive.finalize();
 
-    console.log('ZIP com PDFs gerado e protegido por senha:', zipPath);
+    // Concatenar os buffers para criar o arquivo ZIP completo
+    const zipBuffer = Buffer.concat(buffers);
+
+    console.log('ZIP gerado em memória.');
 
     // 4. Configurar o transporte de e-mail
     console.log('Configurando transporte de e-mail...');
@@ -92,7 +87,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
       service: 'gmail',
       auth: {
         user: 'palavrasdidaticas@gmail.com',
-        pass: 'hqikugaoocmzrhld' // Use a senha do aplicativo ou a senha correta
+        pass: 'hqikugaoocmzrhld', // Use a senha do aplicativo ou a senha correta
       },
     });
 
@@ -112,207 +107,16 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
       to: clienteEmail,
       subject: 'Produtos adquiridos',
       html: `
-        <!DOCTYPE html>
-        <html lang="pt-br">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Caça Atividades Escolares</title>
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-          <style>
-            body, html {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f8f8f8;
-}
-
-.container {
-    max-width: 600px;
-    margin: 20px auto;
-    background: #fff;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.header {
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    /* background-color: #eef6ff; */
-    /* border-bottom: 2px solid #007bff; */
-}
-
-.logo {
-    width: 320px;
-    margin-left: -40px;
-
-}
-
-.header-text {
-    display: flex;
-    flex-direction: column;
-}
-
-.header-text h1 {
-    color: #007bff;
-    margin: 0;
-    font-size: 32px;
-}
-
-.header-text p {
-    margin: 5px 0 0;
-    font-size: 32px;
-    font-weight: bold;
-}
-
-.main-content {
-    text-align: center;
-    padding: 20px;
-}
-
-.main-content p {
-    margin: 15px 0;
-    line-height: 1.6;
-}
-
-.password {
-    font-weight: bold;
-    font-size: 18px;
-    /* background: #eef6ff; */
-    padding: 10px;
-    text-align: center;
-    border-radius: 5px;
-    /* border: 1px solid #007bff; */
-}
-
-.disclaimer {
-    margin-top: 20px;
-    padding: 15px;
-    /* background-color: #fff3cd; */
-    background-color: #eef6ff;
-    border: 1px solid #007bff;
-    border-radius: 5px;
-    font-size: 16px;
-    text-align: justify;
-}
-
-.education-pillars {
-    text-align: center;
-    margin: 20px 0;
-}
-
-.education-pillars h3 {
-    margin-bottom: 10px;
-}
-
-.education-pillars p {
-    margin: 5px 0;
-}
-
-.features {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    text-align: justify;
-}
-
-.feature {
-    width: 45%;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.feature img {
-    width: 200px;
-    height: auto; 
-    margin-bottom: 10px;
-}
-
-.feature p {
-    margin: 5px 0;
-}
-
-.footer {
-    text-align: center;
-    padding: 30px;
-    /* background-color: #eef6ff; */
-    /* border-top: 2px solid #007bff; */
-}
-
-.footer p {
-    margin: 15px 0;
-}
-
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <header class="header">
-              <img src="cid:logo" alt="Logo Caça Atividades Escolares" class="logo">
-              <div class="header-text">
-                <h1>Obrigado (a)!</h1>
-                <p>É uma honra para nós tê-lo como cliente.</p>
-              </div>
-            </header>
-            <main class="main-content">
-              <p>“Olá, ${clienteInfo.nome}! Obrigado por comprar com a gente!</p>
-              <p>Estamos empolgados para saber o que achou dos produtos que adquiriu. Por isso, não esqueça de compartilhar feedback nas redes sociais e marcar (@ da empresa) para que possamos repostar”</p>
-              <p>Abaixo segue a senha para acessar o seu produto:</p>
-              <p class="password">${zipPassword}</p>
-
-              <div class="disclaimer">
-                <strong>
-                <p>É PROIBIDA A REPRODUÇÃO, VENDA E COMPARTILHAMENTO DESTE MATERIAL. TODAS AS APOSTILAS DE CAÇA-PALAVRAS DIDÁTICOS ESTÃO PROTEGIDAS COM SENHA, DE USO PESSOAL DO COMPRADOR. ALÉM DISSO, EM TODAS AS PÁGINAS, ESTÁ O SEU E-MAIL E UM CÓDIGO INTERNO PARA LOCALIZAR RAPIDAMENTE O DONO DO MATERIAL.</p>
-                <p>A VIOLAÇÃO DOS DIREITOS EXCLUSIVOS DO PRODUTOR SERÁ CONSIDERADA CRIME (ARTIGO 184 DO CÓDIGO PENAL), SENDO ESTA FEITA A REPRODUÇÃO, VENDA OU COMPARTILHAMENTO. NÓS SEGUIMOS O DIREITO AUTORAL EM PROCESSOS E AÇÕES LEGAIS PARA RESPONSABILIZÁ-LO POR PLÁGIO E DANOS AOS CLIENTES AUTORAIS. DESDE JÁ CONTAMOS COM A SUA COLABORAÇÃO PARA QUE ESTE MATERIAL NÃO SEJA REPRODUZIDO.</p>
-              </strong>
-              </div>
-
-              <div class="education-pillars">
-                <h3>4 Pilares da Educação</h3>
-                <p>Aprender a Conhecer</p>
-                <p>Aprender a Fazer</p>
-                <p>Aprender a Ser</p>
-                <p>Aprender a Conviver</p>
-              </div>
-
-              <div class="features">
-                <div class="feature">
-                  <i class="fas fa-comments"></i>
-                  <p><strong>Linguagem Dialógica</strong></p>
-                  <p>Nosso material busca promover uma linguagem dialógica, proporcionando oportunidades para diálogos e trocas de experiências.</p>
-                </div>
-                <div class="feature">
-                  <i class="fas fa-dollar-sign"></i>
-                  <p><strong>Investimento</strong></p>
-                  <p>Adquirir nosso material é investir em economia de tempo, melhor qualidade de vida, redução de estresse e maior qualidade nas suas aulas.</p>
-                </div>
-                <div class="feature">
-                  <i class="fas fa-award"></i>
-                  <p><strong>Fácil de Acessar</strong></p>
-                  <p>Todos os nossos materiais incluem uma variedade de modelos e amostras para que você possa verificar se eles atendem às suas necessidades.</p>
-                </div>
-                <div class="feature">
-                  <i class="fas fa-medal"></i>
-                  <p><strong>Credibilidade</strong></p>
-                  <p>Trabalhamos com seriedade e carinho, e há mais de 5 anos no mercado, atendemos milhares de professores em todo o Brasil. Estamos sempre em busca de oferecer o melhor.</p>
-                </div>
-              </div>
-            </main>
-            <footer class="footer">
-              <p>Esperamos que sua experiência com nosso material proporcione momentos enriquecedores de aprendizagem com seus alunos.</p>
-              <p><strong>Atenciosamente,</strong></p>
-              <p>Equipe Caça Atividades Escolares</p>
-            </footer>
-          </div>
-        </body>
-        </html>
+        <p>Olá, ${clienteInfo.nome},</p>
+        <p>Obrigado por comprar com a gente!</p>
+        <p>Abaixo segue a senha para acessar o seu produto:</p>
+        <p><strong>Senha do ZIP: ${zipPassword}</strong></p>
+        <p>É PROIBIDA A REPRODUÇÃO, VENDA E COMPARTILHAMENTO DESTE MATERIAL.</p>
       `,
       attachments: [
         {
           filename: 'produtos_protegidos.zip',
-          path: zipPath,
+          content: zipBuffer,
           contentType: 'application/zip',
         },
         {
@@ -328,12 +132,6 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
     const info = await transporter.sendMail(mailOptions);
     console.log('E-mail enviado com sucesso:', info);
 
-    // 7. Excluir o arquivo ZIP temporário após o envio
-    if (fs.existsSync(zipPath)) {
-      fs.unlinkSync(zipPath);
-    }
-
-    console.log('E-mail com ZIP protegido enviado com sucesso.');
     return 'E-mail com ZIP protegido enviado com sucesso.';
   } catch (error) {
     console.error('Erro ao processar e enviar e-mail:', error);
