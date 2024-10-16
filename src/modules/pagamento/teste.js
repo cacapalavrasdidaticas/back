@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import archiver from 'archiver';
+import path from 'path';
 import { obterProduto } from '../produtos/getProdutoId.js';
 import { buscarContas } from '../login/getAccount.js';
 import archiverZipEncrypted from 'archiver-zip-encrypted';
