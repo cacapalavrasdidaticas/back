@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 import archiver from 'archiver';
 import { PassThrough } from 'stream';
 import { obterProduto } from '../produtos/getProdutoId.js';
-import { buscarContas } from '../login/getContasId.js';
+import { buscarContas } from '../login/getAccount.js';
 import archiverZipEncrypted from 'archiver-zip-encrypted';
 
 // Limites e tempos de espera
