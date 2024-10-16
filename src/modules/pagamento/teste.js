@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import archiver from 'archiver';
 import { obterProduto } from '../produtos/getProdutoId.js';
-import { buscarContas } from '../login/getContasId.js';
+import { buscarContas } from '../login/getAccount.js';
 import archiverZipEncrypted from 'archiver-zip-encrypted';
 // import imagem from "../../assets/img/Logo.svg"
 
