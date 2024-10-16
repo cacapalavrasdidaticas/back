@@ -81,6 +81,9 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
 
     // Adicionar cada PDF ao arquivo ZIP
     produtosValidos.forEach((produto) => {
+      if (!produto.pdf || !Buffer.isBuffer(produto.pdf)) {
+        throw new Error(`PDF para o produto com ID ${produto.id} não encontrado no banco de dados ou não é um Buffer válido.`);
+      }
       console.log(`Adicionando PDF do produto ID ${produto.id} ao ZIP.`);
       archive.append(produto.pdf, { name: `produto_${produto.id}.pdf` });
     });
