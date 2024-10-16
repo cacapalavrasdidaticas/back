@@ -77,6 +77,7 @@ async function enviarPagamento({ customer, billingType, value, dueDate, descript
       value,
       dueDate,
       description,
+      callback: {autoRedirect: true, successUrl: 'http://localhost:3000/Cart'}
     }),
   };
 
