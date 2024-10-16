@@ -450,15 +450,15 @@ app.post('/payment/:cpf', async (req, res) => {
 //     }
 // });
 
-// app.get('/list-payments', async (req, res) => {
-//     try {
-//         const pagamentos = await getPagamentos();
-//         res.status(200).json(pagamentos.data);
-//     } catch (error) {
-//         console.error("Erro ao buscar produtos:", error);
-//         res.status(500).json({ error: "Erro ao buscar produtos" });
-//     }
-// });
+app.get('/list-payments', async (req, res) => {
+    try {
+        const pagamentos = await getPagamentos();
+        res.status(200).json(pagamentos.data);
+    } catch (error) {
+        console.error("Erro ao buscar produtos:", error);
+        res.status(500).json({ error: "Erro ao buscar produtos" });
+    }
+});
 
 app.post('/send-product-ids', async (req, res) => {
     const { productIds, clientId, paymentId } = req.body;
