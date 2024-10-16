@@ -65,7 +65,10 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
 
     // Adicionar cada PDF ao arquivo ZIP
     produtosValidos.forEach((produto) => {
+      console.log(`Verificando tipo de PDF para o produto ID ${produto.id}:`, typeof produto.pdf, produto.pdf.constructor.name);
+      
       if (!produto.pdf || !(produto.pdf instanceof Buffer)) {
+        console.error(`Erro: O PDF do produto com ID ${produto.id} não é um Buffer válido.`);
         throw new Error(`PDF para o produto com ID ${produto.id} não encontrado no banco de dados ou não é um Buffer válido.`);
       }
 
@@ -104,7 +107,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
     // 5. Configurar as opções de e-mail com o ZIP protegido como anexo
     let mailOptions = {
       from: 'palavrasdidaticas@gmail.com',
-      to: "anderson_felipetavares@hotmail.com",
+      to: clienteEmail,
       subject: 'Produtos adquiridos',
       html: `
         <p>Olá, ${clienteInfo.nome},</p>
