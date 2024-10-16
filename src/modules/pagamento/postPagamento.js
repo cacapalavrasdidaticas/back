@@ -79,7 +79,7 @@ async function enviarPagamento({ customer, billingType, value, dueDate, descript
       description,
        callback: {
       autoRedirect: true,
-      successUrl: 'https://front-end-pdf.vercel.app/Cart/:algumaCoisa'
+      successUrl: 'https://front-end-pdf.vercel.app/ConfirmPagament'
     }
     }),
   };
