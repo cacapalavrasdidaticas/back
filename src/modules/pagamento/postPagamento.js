@@ -40,6 +40,8 @@ async function buscarClientePorCpf(cpf) {
     const response = await fetch(url, options);
     const json = await response.json();
 
+    console.log(json, 'dados da api antes')
+
     // Verifica se a resposta foi bem-sucedida
     if (!response.ok) {
       throw new Error(`Erro ao buscar clientes: ${json.message || 'Erro desconhecido'}`);
