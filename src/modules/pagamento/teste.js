@@ -149,6 +149,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     overflow: hidden;
+    padding: 20px;
 }
 
 .header {
@@ -265,7 +266,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
         <body>
           <div class="container">
             <header class="header">
-              <img src="../../assets/img/Logo.svg" alt="Logo Caça Atividades Escolares" class="logo">
+              <img src="cid:logo" alt="Logo Caça Atividades Escolares" class="logo">
               <div class="header-text">
                 <h1>Obrigado (a)!</h1>
                 <p>É uma honra para nós tê-lo como cliente.</p>
