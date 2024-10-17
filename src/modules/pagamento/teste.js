@@ -274,7 +274,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
             </div>
             <main class="main-content">
               <p>“Olá, ${clienteInfo.nome}! Obrigado por comprar com a gente!</p>
-              <p>Estamos empolgados para saber o que achou dos produtos que adquiriu. Por isso, não esqueça de compartilhar feedback nas redes sociais e marcar (@ da empresa) para que possamos repostar”</p>
+              <p>Estamos empolgados para saber o que achou dos produtos que adquiriu. Por isso, não esqueça de compartilhar feedback nas redes sociais e marcar a gente para que possamos repostar”</p>
               <p>Abaixo segue a senha para acessar o seu produto:</p>
               <p class="password">${zipPassword}</p>
 
