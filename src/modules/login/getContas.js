@@ -3,7 +3,7 @@ import db from "../../db.js";
 export async function obterTodasContas() {
     try {
         const contas = await db.any(`
-            SELECT id, nome, senha, datanascimento, email, cpf, telefonecelular, sexo, endereco, bairro, cidadeuf, cep, pais
+            SELECT id, nome, senha, datanascimento, email, cpf, telefonecelular, sexo, endereco, bairro, cidadeuf, cep, pais, admin, compras
             FROM contas
         `);
 
