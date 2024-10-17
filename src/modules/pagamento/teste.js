@@ -261,6 +261,10 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
     margin: 15px 0;
 }
 
+.text{
+    text-align: center;
+}
+
           </style>
         </head>
         <body>
@@ -273,9 +277,9 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
               </div>
             </div>
             <main class="main-content">
-              <p>“Olá, ${clienteInfo.nome}! Obrigado por comprar com a gente!</p>
-              <p>Estamos empolgados para saber o que achou dos produtos que adquiriu. Por isso, não esqueça de compartilhar feedback nas redes sociais e marcar a gente para que possamos repostar”</p>
-              <p>Abaixo segue a senha para acessar o seu produto:</p>
+              <p class="text">“Olá, ${clienteInfo.nome}! Obrigado por comprar com a gente!</p>
+              <p class="text">Estamos empolgados para saber o que achou dos produtos que adquiriu. Por isso, não esqueça de compartilhar feedback nas redes sociais e marcar a gente para que possamos repostar”</p>
+              <p class="text">Abaixo segue a senha para acessar o seu produto:</p>
               <p class="password">${zipPassword}</p>
 
               <div class="disclaimer">
@@ -317,7 +321,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
               </div>
             </main>
             <footer class="footer">
-              <p>Esperamos que sua experiência com nosso material proporcione momentos enriquecedores de aprendizagem com seus alunos.</p>
+              <p class="text">Esperamos que sua experiência com nosso material proporcione momentos enriquecedores de aprendizagem com seus alunos.</p>
               <p><strong>Atenciosamente,</strong></p>
               <p>Equipe Caça Atividades Escolares</p>
             </footer>
