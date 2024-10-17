@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import { obterProduto } from '../produtos/getProdutoIdV2.js';
 import { buscarContas } from '../login/getAccount.js';
 import archiverZipEncrypted from 'archiver-zip-encrypted';
+import { atualizarComprasCliente } from '../login/atualizarCompras.js';
 
 const MAX_ATTEMPTS = 5; // Limite de tentativas de busca
 const WAIT_TIME_MS = 2000; // Tempo de espera entre tentativas (2 segundos)
@@ -51,7 +52,10 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
 
     console.log(`Cliente encontrado: ${clienteInfo.nome} (${clienteEmail})`);
 
-    // 2. Buscar os produtos e aguardar que os PDFs estejam disponíveis
+    // 2. Atualizar o campo "compras" do cliente com os IDs dos produtos adquiridos
+    await atualizarComprasCliente(clientId, productIds);
+
+    // 3. Buscar os produtos e aguardar que os PDFs estejam disponíveis
     const produtos = await Promise.all(
       productIds.map(async (id) => {
         console.log(`Buscando produto com ID: ${id}`);
@@ -66,7 +70,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
       throw new Error('Nenhum produto válido encontrado para os IDs fornecidos.');
     }
 
-    // 3. Gerar o arquivo ZIP com os PDFs diretamente na memória
+    // 4. Gerar o arquivo ZIP com os PDFs diretamente na memória
     const archive = archiver('zip-encrypted', {
       zlib: { level: 9 },
       encryptionMethod: 'aes256',
@@ -95,7 +99,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
     const zipBuffer = Buffer.concat(buffers);
     console.log('ZIP gerado em memória.');
 
-    // 4. Configurar o transporte de e-mail
+    // 5. Configurar o transporte de e-mail
     console.log('Configurando transporte de e-mail...');
     let transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -115,7 +119,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
       }
     });
 
-    // 5. Configurar as opções de e-mail com o ZIP protegido como anexo
+    // 6. Configurar as opções de e-mail com o ZIP protegido como anexo
     let mailOptions = {
       from: 'palavrasdidaticas@gmail.com',
       // Para enviar para o cliente real, use o email do cliente
@@ -143,7 +147,7 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
       ],
     };
 
-    // 6. Enviar o e-mail e capturar sucesso/falha
+    // 7. Enviar o e-mail e capturar sucesso/falha
     console.log('Enviando e-mail...');
     const info = await transporter.sendMail(mailOptions);
     console.log('E-mail enviado com sucesso:', info);
