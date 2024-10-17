@@ -265,13 +265,13 @@ export async function processarEEnviarEmail(productIds, clientId, paymentId) {
         </head>
         <body>
           <div class="container">
-            <header class="header">
+            <div class="header">
               <img src="cid:logo" alt="Logo Caça Atividades Escolares" class="logo">
               <div class="header-text">
                 <h1>Obrigado (a)!</h1>
                 <p>É uma honra para nós tê-lo como cliente.</p>
               </div>
-            </header>
+            </div>
             <main class="main-content">
               <p>“Olá, ${clienteInfo.nome}! Obrigado por comprar com a gente!</p>
               <p>Estamos empolgados para saber o que achou dos produtos que adquiriu. Por isso, não esqueça de compartilhar feedback nas redes sociais e marcar (@ da empresa) para que possamos repostar”</p>
