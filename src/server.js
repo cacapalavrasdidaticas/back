@@ -31,6 +31,7 @@ import { postPagamento } from "./modules/pagamento/postPagamento.js"
 import { buscarCliente, buscarProduto } from './modules/pagamento/enviarDados.js';
 import { getPagamentos } from "./modules/pagamento/listarPagamento.js";
 import { processarEEnviarEmail  } from './modules/pagamento/teste.js'
+import { buscarClientePorCpf} from "./modules/pagamento/listarPagamentoCpf.js"
 const app = express();
 const pusher = new Pusher({
   appId: '1871684',
@@ -457,6 +458,23 @@ app.get('/list-payments', async (req, res) => {
     } catch (error) {
         console.error("Erro ao buscar produtos:", error);
         res.status(500).json({ error: "Erro ao buscar produtos" });
+    }
+});
+
+app.get('/list-payments-cpf/:cpf', async (req, res) => {
+    const { cpf } = req.params;
+    
+    try {
+        const pagamentos = await buscarClientePorCpf(cpf);
+
+        if (!pagamentos) {
+            return res.status(404).json({ error: "Cliente não encontrado ou sem pagamentos" });
+        }
+
+        res.status(200).json(pagamentos);
+    } catch (error) {
+        console.error("Erro ao buscar pagamentos:", error);
+        res.status(500).json({ error: "Erro ao buscar pagamentos" });
     }
 });
 
