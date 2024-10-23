@@ -45,7 +45,7 @@ export async function buscarClientePorCpf(cpf) {
 
 // Certifique-se de também exportar buscarPagamentosPorCliente se for necessário
 export async function buscarPagamentosPorCliente(customerId) {
-    const url = `https://api.asaas.com/v3/payments?customer=${customerId}`;
+    const url = `https://sandbox.asaas.com/api/v3/payments?customer${customerId}`;
     const token = getTokenById(1).token;
 
     const options = {
@@ -58,7 +58,7 @@ export async function buscarPagamentosPorCliente(customerId) {
 
     try {
         const response = await fetch(url, options);
-        const json = await response;
+        const json = await response.json();
 
         console.log(json, 'dados de pagamentos');
 
