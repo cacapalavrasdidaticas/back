@@ -471,7 +471,7 @@ app.get('/list-payments-cpf/:cpf', async (req, res) => {
             return res.status(404).json({ error: "Cliente não encontrado ou sem pagamentos" });
         }
 
-        res.status(200).json(pagamentos);
+        res.status(200).json(pagamentos.data);
     } catch (error) {
         console.error("Erro ao buscar pagamentos:", error);
         res.status(500).json({ error: "Erro ao buscar pagamentos" });
