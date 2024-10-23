@@ -58,7 +58,7 @@ export async function buscarPagamentosPorCliente(customerId) {
 
     try {
         const response = await fetch(url, options);
-        const json = await response.json();
+        const json = await response;
 
         console.log(json, 'dados de pagamentos');
 
