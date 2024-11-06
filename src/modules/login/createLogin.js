@@ -38,7 +38,7 @@ export async function criarConta(usuario) {
 async function enviarParaAsaas(cliente) {
   const url = "https://sandbox.asaas.com/api/v3/customers";
 
-  const token = getTokenById(1);
+  const token = getTokenById(1).token;;
 
   const body = {
     name: cliente.nome,
