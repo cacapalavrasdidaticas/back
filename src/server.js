@@ -33,6 +33,7 @@ import { getPagamentos } from "./modules/pagamento/listarPagamento.js";
 import { processarEEnviarEmail  } from './modules/pagamento/teste.js';
 import { buscarClientePorCpf} from "./modules/pagamento/listarPagamentoCpf.js";
 import { deletarContaPorId } from "./modules/login/deleteContas.js";
+import { redefinirSenha } from './modules/login/resetPassword.js';
 const app = express();
 const pusher = new Pusher({
   appId: '1871684',
