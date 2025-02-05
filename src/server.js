@@ -541,6 +541,8 @@ app.post('/send-product-ids', async (req, res) => {
 app.post('/esqueci-senha', async (req, res) => {
     const { email, novaSenha } = req.body;
 
+  console.log(req.body)
+
     if (!email || !novaSenha) {
         return res.status(400).json({ error: "E-mail e nova senha são obrigatórios." });
     }
