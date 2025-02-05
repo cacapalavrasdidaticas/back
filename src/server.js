@@ -538,6 +538,29 @@ app.post('/send-product-ids', async (req, res) => {
 });
 
 
+app.post('/esqueci-senha', async (req, res) => {
+    const { email, novaSenha } = req.body;
+
+    if (!email || !novaSenha) {
+        return res.status(400).json({ error: "E-mail e nova senha são obrigatórios." });
+    }
+
+    try {
+        const resultado = await redefinirSenha(email, novaSenha);
+        
+        if (!resultado) {
+            return res.status(404).json({ error: "E-mail não encontrado." });
+        }
+
+        res.status(200).json({ message: "Senha redefinida com sucesso." });
+    } catch (error) {
+        console.error("Erro ao redefinir senha:", error);
+        res.status(500).json({ error: "Erro ao processar a redefinição de senha." });
+    }
+});
+
+
+
 app.listen(5000, () => {
     console.log("API rodando na porta 5000");
 });
