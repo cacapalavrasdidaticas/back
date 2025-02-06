@@ -25,8 +25,8 @@ export async function postPagamento({ cpf, billingType, value, dueDate, descript
 
 // Função para buscar o cliente com base no CPF
 async function buscarClientePorCpf(cpf) {
-    const url = "https://sandbox.asaas.com/api/v3/customers";
-    const token = getTokenById(1).token;
+    const url = "https://api.asaas.com/api/v3/customers";
+    const token = getTokenById(2).token;
 
   const options = {
     method: 'GET',
@@ -61,8 +61,8 @@ async function buscarClientePorCpf(cpf) {
 
 // Função para enviar as informações de pagamento
 async function enviarPagamento({ customer, billingType, value, dueDate, description }) {
-    const url = "https://sandbox.asaas.com/api/v3/payments/";
-    const token = getTokenById(1).token;
+    const url = "https://api.asaas.com/api/v3/payments/";
+    const token = getTokenById(2).token;
 
   const options = {
     method: 'POST',
