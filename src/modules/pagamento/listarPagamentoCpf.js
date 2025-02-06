@@ -5,8 +5,8 @@ import { loadTokens, getTokenById } from "../../tokenManager.js";
 dotenv.config();
 
 export async function buscarClientePorCpf(cpf) {
-    const url = "https://sandbox.asaas.com/api/v3/customers";
-    const token = getTokenById(1).token;
+    const url = "https://api.asaas.com/api/v3/customers";
+    const token = getTokenById(2).token;
 
     const options = {
         method: 'GET',
@@ -45,8 +45,8 @@ export async function buscarClientePorCpf(cpf) {
 
 // Certifique-se de também exportar buscarPagamentosPorCliente se for necessário
 export async function buscarPagamentosPorCliente(customerId) {
-    const url = `https://sandbox.asaas.com/api/v3/payments?customer${customerId}`;
-    const token = getTokenById(1).token;
+    const url = `https://api.asaas.com/api/v3/payments?customer${customerId}`;
+    const token = getTokenById(2).token;
 
     const options = {
         method: 'GET',
