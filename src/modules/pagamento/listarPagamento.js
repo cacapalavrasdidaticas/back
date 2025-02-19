@@ -6,7 +6,7 @@ dotenv.config();
 
 // Função para buscar pagamentos
 export async function getPagamentos() {
-  const url = 'https://api.asaas.com/api/v3/payments'; // Certifique-se que o URL está correto
+  const url = 'https://api.asaas.com/v3/payments'; // Certifique-se que o URL está correto
   const token = getTokenById(2).token; // Assumindo que o token é o mesmo do post
   console.log(token, 'token atual', getTokenById(2).description, 'descrição')
 
