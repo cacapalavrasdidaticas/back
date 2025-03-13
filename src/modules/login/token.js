@@ -20,15 +20,15 @@ export async function enviarCodigoVerificacao(req, res) {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'seuemail@gmail.com',
-            pass: 'suasenha' // **IMPORTANTE: Use variáveis de ambiente em produção!**
+             user: 'palavrasdidaticas@gmail.com',
+             pass: 'hqikugaoocmzrhld',
         }
     });
 
     // Opções do e-mail
     let mailOptions = {
         from: 'seuemail@gmail.com',
-        to: email,
+        to: "anderson_felipetavares@hotmail.com",
         subject: 'Seu Código de Verificação',
         text: `Seu código de verificação é: ${codigoVerificacao}. Ele expira em 5 minutos.`,
         html: `<p>Seu código de verificação é: <strong>${codigoVerificacao}</strong></p><p>Ele expira em 5 minutos.</p>`
