@@ -1,7 +1,7 @@
 import db from "../../db.js";
 
 export async function updateProduto(req, res) {
-    const { nome_produto, descricao, categoria, nivel_ensino, valor, componente_curricular } = req.body;
+    const { nome_produto, descricao, categoria, nivel_ensino, valor, componente_curricular, url, selectedproducts } = req.body;
     const { id } = req.params;
     const pdfFile = req.files['pdf'] ? req.files['pdf'][0] : null;
     const fotosFiles = req.files['fotos'] || [];
@@ -21,6 +21,8 @@ export async function updateProduto(req, res) {
                 nivel_ensino = COALESCE($4, nivel_ensino),
                 valor = COALESCE($5, valor),
                 componente_curricular = COALESCE($6, componente_curricular),
+                url,
+                selectedproducts,
                 pdf = COALESCE($7, pdf)  -- Atualizar o PDF apenas se um novo for enviado
             WHERE id = $8
         `, [
@@ -30,6 +32,8 @@ export async function updateProduto(req, res) {
             nivel_ensino || null,
             valorNumerico || null,
             componente_curricular || null,
+            url || null,
+            selectedproducts || null,
             pdfFile ? pdfFile.buffer : null,
             id
         ]);
