@@ -35,7 +35,7 @@ import { buscarClientePorCpf} from "./modules/pagamento/listarPagamentoCpf.js";
 import { deletarContaPorId } from "./modules/login/deleteContas.js";
 import { redefinirSenha } from './modules/login/resetPassword.js';
 import { obterProdutoPdf } from "./modules/produtos/getProdutosV3.js";
-import { enviarCodigoVerificacao, verificarCodigoVerificacao } from './token.js';
+import { enviarCodigoVerificacao, verificarCodigoVerificacao } from './modules/login/token.js';
 const app = express();
 const pusher = new Pusher({
   appId: '1871684',
