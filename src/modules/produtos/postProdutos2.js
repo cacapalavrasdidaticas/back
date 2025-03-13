@@ -9,7 +9,7 @@ if (!fs.existsSync(tempDir)) {
 }
 
 export async function createProdutoV2(req, res) {
-    const { nome_produto, descricao, categoria, nivel_ensino, valor, componente_curricular, partIndex, totalParts, nomeArquivo, selectedProducts } = req.body;
+    const { nome_produto, descricao, categoria, nivel_ensino, valor, componente_curricular, partIndex, totalParts, nomeArquivo, selectedProducts, url } = req.body;
     const fotosFiles = req.files['fotos'] || [];
     const pdfPart = req.files['part'] ? req.files['part'][0] : null;
     let produtoId = null;
@@ -51,17 +51,17 @@ export async function createProdutoV2(req, res) {
                             }
                         }
 
-                        // Inserir o produto no banco de dados com `selectedProducts`
+                        // Inserir o produto no banco de dados com `url` e `selectedProducts`
                         const produto = await db.one(`
                             INSERT INTO produtos 
-                                (nome_produto, descricao, categoria, nivel_ensino, valor, componente_curricular, pdf, selectedProducts)
+                                (nome_produto, descricao, categoria, nivel_ensino, valor, componente_curricular, pdf, url, selectedProducts)
                             VALUES 
-                                ($1, $2, $3, $4, $5, $6, $7::bytea, $8)
+                                ($1, $2, $3, $4, $5, $6, $7::bytea, $8, $9)
                             RETURNING id
                         `, [
                             nome_produto, descricao, categoria, nivel_ensino,
                             parseFloat(valor).toFixed(2), componente_curricular,
-                            pdfData, selectedProductsValue || null
+                            pdfData, url, selectedProductsValue || null
                         ]);
 
                         produtoId = produto.id;
