@@ -42,3 +42,35 @@ export async function enviarCodigoVerificacao(req, res) {
         res.status(500).json({ error: 'Erro ao enviar código de verificação' });
     }
 }
+
+export async function verificarCodigoVerificacao(req, res) {
+    const { email, codigo } = req.body;
+
+    if (!email || !codigo) {
+        return res.status(400).json({ error: 'E-mail e código são obrigatórios' });
+    }
+
+    const dados = verificationCodes.get(email);
+    
+    if (!dados) {
+        return res.status(400).json({ error: 'Nenhum código encontrado para este e-mail' });
+    }
+
+    // Verificar se o código expirou
+    if (Date.now() > dados.expiresAt) {
+        verificationCodes.delete(email); // Remover código expirado
+        return res.status(400).json({ error: 'Código expirado. Solicite um novo.' });
+    }
+
+    // Verificar se o código está correto
+    if (dados.code !== parseInt(codigo)) {
+        return res.status(400).json({ error: 'Código inválido' });
+    }
+
+    // Código correto, remover para evitar reuso
+    verificationCodes.delete(email);
+
+    res.status(200).json({ message: 'Código verificado com sucesso!' });
+}
+
+
