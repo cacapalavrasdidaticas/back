@@ -4,7 +4,7 @@ import db from "../../db.js";
 export async function obterTodosProdutos() {
     try {
         const produtos = await db.any(`
-            SELECT p.id, p.nome_produto, p.descricao, p.categoria, p.nivel_ensino, p.valor, p.componente_curricular, 
+            SELECT p.id, p.nome_produto, p.descricao, p.categoria, p.nivel_ensino, p.valor, p.componente_curricular, p.url, p.selectedproducts,
                    encode(p.pdf, 'base64') AS pdf,  -- Codificar o PDF para Base64
                    COALESCE(json_agg(encode(f.foto, 'base64')) FILTER (WHERE f.foto IS NOT NULL), '[]') AS fotos  -- Codificar as fotos para Base64
             FROM produtos p
