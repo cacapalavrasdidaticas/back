@@ -27,12 +27,20 @@ export async function enviarCodigoVerificacao(req, res) {
 
     // Opções do e-mail
     let mailOptions = {
-        from: 'seuemail@gmail.com',
-        to: email,
-        subject: 'Seu Código de Verificação',
-        text: `Seu código de verificação é: ${codigoVerificacao}. Ele expira em 5 minutos.`,
-        html: `<p>Seu código de verificação é: <strong>${codigoVerificacao}</strong></p><p>Ele expira em 5 minutos.</p>`
-    };
+    from: 'seuemail@gmail.com',
+    to: email,
+    subject: 'Seu Código de Acesso - Caça Atividades Escolares',
+    text: `Seu código de acesso para efetuar login na sua conta no Caça Atividades Escolares é:\n\n${codigoVerificacao}\n\nEste código é válido por 5 minutos. Insira-o no site para concluir seu login.\n\nSe você não solicitou este código, ignore este e-mail.\n\nAtenciosamente,\nEquipe Caça Atividades Escolares`,
+    html: `
+        <p>Seu código de acesso para efetuar login na sua conta no <strong>Caça Atividades Escolares</strong> é:</p>
+        <h2 style="text-align: center; font-size: 24px; color: #007bff;">${codigoVerificacao}</h2>
+        <p>Este código é válido por <strong>5 minutos</strong>. Insira-o no site para concluir seu login.</p>
+        <p style="color: red;"><strong>Se você não solicitou este código, ignore este e-mail.</strong></p>
+        <p>Atenciosamente,</p>
+        <p><strong>Equipe Caça Atividades Escolares</strong></p>
+    `
+};
+
 
     try {
         await transporter.sendMail(mailOptions);
