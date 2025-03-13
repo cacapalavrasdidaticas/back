@@ -21,8 +21,8 @@ export async function updateProduto(req, res) {
                 nivel_ensino = COALESCE($4, nivel_ensino),
                 valor = COALESCE($5, valor),
                 componente_curricular = COALESCE($6, componente_curricular),
-                url,
-                selectedproducts,
+                 url = COALESCE($7, url),
+                selectedproducts = COALESCE($8, selectedproducts),
                 pdf = COALESCE($7, pdf)  -- Atualizar o PDF apenas se um novo for enviado
             WHERE id = $8
         `, [
