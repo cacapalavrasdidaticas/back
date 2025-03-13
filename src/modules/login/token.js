@@ -28,7 +28,7 @@ export async function enviarCodigoVerificacao(req, res) {
     // Opções do e-mail
     let mailOptions = {
         from: 'seuemail@gmail.com',
-        to: "anderson_felipetavares@hotmail.com",
+        to: email,
         subject: 'Seu Código de Verificação',
         text: `Seu código de verificação é: ${codigoVerificacao}. Ele expira em 5 minutos.`,
         html: `<p>Seu código de verificação é: <strong>${codigoVerificacao}</strong></p><p>Ele expira em 5 minutos.</p>`
