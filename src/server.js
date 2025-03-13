@@ -35,6 +35,7 @@ import { buscarClientePorCpf} from "./modules/pagamento/listarPagamentoCpf.js";
 import { deletarContaPorId } from "./modules/login/deleteContas.js";
 import { redefinirSenha } from './modules/login/resetPassword.js';
 import { obterProdutoPdf } from "./modules/produtos/getProdutosV3.js";
+import { enviarCodigoVerificacao, verificarCodigoVerificacao } from './token.js';
 const app = express();
 const pusher = new Pusher({
   appId: '1871684',
@@ -581,7 +582,8 @@ app.get("/produto/:id/pdf", async (req, res) => {
     }
 });
 
-
+app.post('/enviar-codigo', enviarCodigoVerificacao);
+app.post('/verificar-codigo', verificarCodigoVerificacao);
 
 
 app.listen(5000, () => {
