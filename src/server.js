@@ -34,6 +34,7 @@ import { processarEEnviarEmail  } from './modules/pagamento/teste.js';
 import { buscarClientePorCpf} from "./modules/pagamento/listarPagamentoCpf.js";
 import { deletarContaPorId } from "./modules/login/deleteContas.js";
 import { redefinirSenha } from './modules/login/resetPassword.js';
+import { obterProdutoPdf } from "./modules/produtos/getProdutosV3.js";
 const app = express();
 const pusher = new Pusher({
   appId: '1871684',
@@ -561,6 +562,25 @@ app.post('/esqueci-senha', async (req, res) => {
         res.status(500).json({ error: "Erro ao processar a redefinição de senha." });
     }
 });
+
+
+app.get("/produto/:id/pdf", async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const pdfBase64 = await obterProdutoPdf(id);
+
+        if (!pdfBase64) {
+            return res.status(404).json({ error: "PDF não encontrado" });
+        }
+
+        res.json({ pdf: pdfBase64 });
+    } catch (error) {
+        console.error("Erro ao buscar PDF do produto:", error);
+        res.status(500).json({ error: "Erro ao buscar PDF do produto" });
+    }
+});
+
 
 
 
