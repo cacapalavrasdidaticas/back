@@ -14,7 +14,8 @@ export async function atualizarConta(id, usuario) {
         cidadeUF,
         cep,
         pais,
-        senha
+        senha,
+        termos
     } = usuario;
 
     let hashedSenha;
@@ -44,7 +45,8 @@ export async function atualizarConta(id, usuario) {
                 cidadeUF = COALESCE($9, cidadeUF),
                 cep = COALESCE($10, cep),
                 pais = COALESCE($11, pais),
-                senha = COALESCE($12, senha)
+                senha = COALESCE($12, senha),
+                termos = COALESCE($13, termos)
             WHERE id = $13
             RETURNING *;
         `;
@@ -62,6 +64,7 @@ export async function atualizarConta(id, usuario) {
             cep ?? null,
             pais ?? null,
             hashedSenha ?? null,
+            termos ?? null,
             id
         ]);
 
