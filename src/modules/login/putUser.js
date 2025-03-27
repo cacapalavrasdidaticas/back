@@ -51,7 +51,7 @@ export async function atualizarConta(id, usuario) {
                 pais = COALESCE($11, pais),
                 senha = COALESCE($12, senha),
                 termos = COALESCE($13, termos)
-            WHERE id = $13
+            WHERE id = $14
             RETURNING *;
         `;
 
