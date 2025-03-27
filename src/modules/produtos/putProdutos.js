@@ -5,6 +5,7 @@ export async function updateProduto(req, res) {
     const { id } = req.params;
     const pdfFile = req.files['pdf'] ? req.files['pdf'][0] : null;
     const fotosFiles = req.files['fotos'] || [];
+    console.log(nome_produto, descricao, categoria, nivel_ensino, valor, componente_curricular, url, selectedproducts);
 
     try {
         // Converter o valor para um número com duas casas decimais
