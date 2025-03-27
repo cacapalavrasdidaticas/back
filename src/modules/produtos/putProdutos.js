@@ -23,7 +23,7 @@ export async function updateProduto(req, res) {
                 componente_curricular = COALESCE($6, componente_curricular),
                  url = COALESCE($7, url),
                 selectedproducts = COALESCE($8, selectedproducts),
-                pdf = COALESCE($7, pdf)  -- Atualizar o PDF apenas se um novo for enviado
+                pdf = COALESCE($9, pdf)  -- Atualizar o PDF apenas se um novo for enviado
             WHERE id = $8
         `, [
             nome_produto || null,
