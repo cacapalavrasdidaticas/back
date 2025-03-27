@@ -32,6 +32,10 @@ export async function atualizarConta(id, usuario) {
                 throw error;
             }
         }
+
+        // Convertendo 'termos' para um formato de data válido se for passado
+        const termosData = termos ? new Date(termos) : null;
+        
         const query = `
             UPDATE contas
             SET nome = COALESCE($1, nome),
@@ -64,7 +68,7 @@ export async function atualizarConta(id, usuario) {
             cep ?? null,
             pais ?? null,
             hashedSenha ?? null,
-            termos ?? null,
+            termosData  ?? null,
             id
         ]);
 
