@@ -9,7 +9,9 @@ export async function updateProduto(req, res) {
 
     try {
         // Converter o valor para um número com duas casas decimais
-        const valorNumerico = parseFloat(valor).toFixed(2);
+        // const valorNumerico = parseFloat(valor).toFixed(2);
+          const valorNumerico = parseFloat(valor.replace(',', '.')).toFixed(2);
+        
         console.log('Valor atualizado:', valorNumerico);
 
         // Atualizar o produto na tabela 'produtos', mantendo os dados não alterados
@@ -25,7 +27,7 @@ export async function updateProduto(req, res) {
                  url = COALESCE($7, url),
                 selectedproducts = COALESCE($8, selectedproducts),
                 pdf = COALESCE($9, pdf)  -- Atualizar o PDF apenas se um novo for enviado
-            WHERE id = $8
+            WHERE id = $10
         `, [
             nome_produto || null,
             descricao || null,
