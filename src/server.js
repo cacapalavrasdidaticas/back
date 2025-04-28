@@ -58,7 +58,7 @@ if (!fs.existsSync(uploadDir)) {
 
 // Configuração do CORS
 const corsOptions = {
-    origin: ['http://localhost:3000', 'https://front-end-pdf.vercel.app', 'http://localhost:3000/home/pdf'],
+    origin: ['http://localhost:3000', 'https://front-end-pdf.vercel.app', 'http://localhost:3000/home/pdf', 'https://cacaatividadesescolares.com.br/'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'api-key']
 };
