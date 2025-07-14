@@ -154,7 +154,7 @@ app.post('/criar-conta', async (req, res) => {
         res.status(201).json({ message: "Conta criada com sucesso", id });
     } catch (error) {
         console.error("Erro ao criar conta:", error);
-        res.status(500).json({ error: "Erro ao criar conta. Ref: " });
+        res.status(500).json({ error: ("Erro ao criar conta. Ref: " + error?.message) });
     }
 });
 
