@@ -69,7 +69,7 @@ async function enviarParaAsaas(cliente) {
         console.log('Resposta do Asaas:', json);
 
         if (!response.ok) {
-            throw new Error(`Erro ao enviar para Asaas: ${json.errors?[0].description || json.message || 'Erro desconhecido'}`);
+            throw new Error(`Erro ao enviar para Asaas: ${json.errors[0].description || json.message || 'Erro desconhecido'}`);
         }
 
         return json;
