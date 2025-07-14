@@ -39,7 +39,7 @@ export async function criarConta(usuario) {
         return { id: novaConta.id, asaas: resultadoAsaas };
     } catch (error) {
         console.error("Erro ao criar conta:", error.message);
-        throw error;
+        throw error?.message;
     }
 }
 
@@ -75,7 +75,7 @@ async function enviarParaAsaas(cliente) {
         return json;
     } catch (err) {
         console.error('Erro ao chamar API Asaas:', err);
-        throw err;
+        throw err?.message;
     }
 }
 
