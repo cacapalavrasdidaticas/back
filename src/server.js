@@ -36,6 +36,8 @@ import { deletarContaPorId } from "./modules/login/deleteContas.js";
 import { redefinirSenha } from './modules/login/resetPassword.js';
 import { obterProdutoPdf } from "./modules/produtos/getProdutosV3.js";
 import { enviarCodigoVerificacao, verificarCodigoVerificacao } from './modules/login/token.js';
+import { obterTodosProspects, criarProspect } from "./modules/produtos/clientes.js";
+
 const app = express();
 const pusher = new Pusher({
   appId: '1871684',
@@ -585,7 +587,29 @@ app.get("/produto/:id/pdf", async (req, res) => {
 app.post('/enviar-codigo', enviarCodigoVerificacao);
 app.post('/verificar-codigo', verificarCodigoVerificacao);
 
+app.get("/prospects", async (req, res) => {
+  try {
+    const data = await obterTodosProspects();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao buscar prospects" });
+  }
+});
+
+app.post("/prospects", async (req, res) => {
+  try {
+    const { nome, email, telefone } = req.body;
+    const novo = await criarProspect({ nome, email, telefone });
+    res.status(201).json(novo);
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao criar prospect" });
+  }
+});
+
 
 app.listen(5000, () => {
     console.log("API rodando na porta 5000");
 });
+
+
+
