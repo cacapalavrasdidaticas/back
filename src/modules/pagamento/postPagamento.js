@@ -79,7 +79,7 @@ async function enviarPagamento({ customer, billingType, value, dueDate, descript
       description,
        callback: {
       autoRedirect: true,
-      successUrl: 'https://front-end-pdf.vercel.app/ConfirmPagament'
+      successUrl: 'https://cacaatividadesescolares.com.br/ConfirmPagament'
     }
     }),
   };
@@ -101,3 +101,4 @@ async function enviarPagamento({ customer, billingType, value, dueDate, descript
     throw err;
   }
 }
+
