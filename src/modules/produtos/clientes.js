@@ -18,7 +18,7 @@ export async function obterTodosProspects() {
 // 📨 POST - criar novo prospect
 export async function criarProspect({ nome, email, telefone, materia }) {
   try {
-    // 🔎 Verifica se o e-mail já existe
+    // Verificar se o e-mail já existe
     const existente = await db.oneOrNone(
       `SELECT id FROM prospect_clients WHERE email = $1`,
       [email]
@@ -32,21 +32,27 @@ export async function criarProspect({ nome, email, telefone, materia }) {
       };
     }
 
-    // 🔄 Garante que materia é sempre um array (mesmo que venha vazio ou string)
+    // 🔄 Garantir que materia seja sempre um array
     const materiasArray = Array.isArray(materia)
       ? materia
       : typeof materia === "string"
       ? materia.split(",").map((m) => m.trim())
       : [];
 
-    // 🧩 Insere os dados no banco (cast para text[])
+    // 🚀 Converter o array JS em literal SQL do tipo {item1,item2,...}
+    const materiasSQL =
+      materiasArray.length > 0
+        ? `{${materiasArray.map((m) => `"${m}"`).join(",")}}`
+        : "{}";
+
+    // 🧩 Inserir o registro no banco
     const novoProspect = await db.one(
       `
       INSERT INTO prospect_clients (nome, email, telefone, materia)
       VALUES ($1, $2, $3, $4::text[])
       RETURNING id, nome, email, telefone, materia, created_at
       `,
-      [nome, email, telefone, materiasArray]
+      [nome, email, telefone, materiasSQL]
     );
 
     return novoProspect;
