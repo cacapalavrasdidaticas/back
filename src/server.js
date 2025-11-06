@@ -598,18 +598,21 @@ app.get("/prospects", async (req, res) => {
 
 app.post("/prospects", async (req, res) => {
   try {
-    const { nome, email, telefone } = req.body;
-    const novo = await criarProspect({ nome, email, telefone });
+    const { nome, email, telefone, materia } = req.body; // ✅ agora inclui materia
+    const novo = await criarProspect({ nome, email, telefone, materia }); // ✅ passa adiante
     res.status(201).json(novo);
   } catch (error) {
+    console.error("Erro ao criar prospect:", error);
     res.status(500).json({ error: "Erro ao criar prospect" });
   }
 });
 
 
+
 app.listen(5000, () => {
     console.log("API rodando na porta 5000");
 });
+
 
 
 
