@@ -534,7 +534,7 @@ app.post('/send-product-ids', async (req, res) => {
             message: 'E-mail enviado com sucesso.',
             cliente,
             produtos: produtosValidos,
-            resultadoEnvioEmail,
+            // resultadoEnvioEmail,
         });
     } catch (error) {
         console.error("Erro ao processar a requisição:", error);
@@ -610,6 +610,7 @@ app.post("/prospects", async (req, res) => {
 app.listen(5000, () => {
     console.log("API rodando na porta 5000");
 });
+
 
 
 
