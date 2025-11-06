@@ -1,19 +1,7 @@
 import db from "../../db.js";
+import pgPromise from "pg-promise";
 
-// 🧾 GET - listar todos os prospects
-export async function obterTodosProspects() {
-  try {
-    const prospects = await db.any(`
-      SELECT id, nome, email, telefone, materia, created_at
-      FROM prospect_clients
-      ORDER BY created_at DESC
-    `);
-    return prospects;
-  } catch (error) {
-    console.error("Erro ao buscar prospects:", error);
-    throw error;
-  }
-}
+const pgp = pgPromise({ capSQL: true }); // habilita SQL seguro com formatação correta
 
 // 📨 POST - criar novo prospect
 export async function criarProspect({ nome, email, telefone, materia }) {
@@ -32,20 +20,17 @@ export async function criarProspect({ nome, email, telefone, materia }) {
       };
     }
 
-    // 🔄 Garantir que materia seja sempre um array
+    // Garante que materia é array e converte para literal SQL {item1,item2}
     const materiasArray = Array.isArray(materia)
       ? materia
       : typeof materia === "string"
       ? materia.split(",").map((m) => m.trim())
       : [];
 
-    // 🚀 Converter o array JS em literal SQL do tipo {item1,item2,...}
-    const materiasSQL =
-      materiasArray.length > 0
-        ? `{${materiasArray.map((m) => `"${m}"`).join(",")}}`
-        : "{}";
+    // formata corretamente para o PostgreSQL
+    const materiasSQL = pgp.as.array(materiasArray);
 
-    // 🧩 Inserir o registro no banco
+    // Query de inserção
     const novoProspect = await db.one(
       `
       INSERT INTO prospect_clients (nome, email, telefone, materia)
