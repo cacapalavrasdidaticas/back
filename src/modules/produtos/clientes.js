@@ -21,7 +21,7 @@ export async function obterTodosProspects() {
 // 📨 POST - criar novo prospect
 export async function criarProspect({ nome, email, telefone, materia }) {
   try {
-    // Verifica se o e-mail já existe
+    // Verificar se já existe e-mail
     const existente = await db.oneOrNone(
       `SELECT id FROM prospect_clients WHERE email = $1`,
       [email]
@@ -35,29 +35,23 @@ export async function criarProspect({ nome, email, telefone, materia }) {
       };
     }
 
-    // Garante que materia é um array de strings
+    // ✅ Garante que materia é um array
     const materiasArray = Array.isArray(materia)
       ? materia
       : typeof materia === "string"
       ? materia.split(",").map((m) => m.trim())
       : [];
 
-    // Se vier vazio → '{}'
-    // Se tiver valores → '{item1,item2,...}'
-    const materiasSQL =
-      materiasArray.length > 0
-        ? `'{"${materiasArray.join('","')}"}'`
-        : `'{}'`;
-
-    // Monta a query
-    const query = `
+    // 🧩 Inserir o registro corretamente, sem interpolação manual
+    const novoProspect = await db.one(
+      `
       INSERT INTO prospect_clients (nome, email, telefone, materia)
-      VALUES ($1, $2, $3, ${materiasSQL}::text[])
+      VALUES ($1, $2, $3, $4)
       RETURNING id, nome, email, telefone, materia, created_at
-    `;
+      `,
+      [nome, email, telefone, materiasArray] // envia o array direto
+    );
 
-    // Executa
-    const novoProspect = await db.one(query, [nome, email, telefone]);
     return novoProspect;
   } catch (error) {
     console.error("Erro ao criar prospect:", error);
