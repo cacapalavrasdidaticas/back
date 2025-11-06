@@ -527,7 +527,7 @@ app.post('/send-product-ids', async (req, res) => {
 
         // 4. Enviar e-mail com os produtos e o cliente encontrados
         // Suponha que você tenha uma função para enviar o e-mail
-        const resultadoEnvioEmail = await processarEEnviarEmail(productIds, clientId, paymentId);
+        // const resultadoEnvioEmail = await processarEEnviarEmail(productIds, clientId, paymentId);
 
         // 5. Se o e-mail for enviado com sucesso, retornar sucesso para o cliente
         res.status(200).json({
@@ -610,6 +610,7 @@ app.post("/prospects", async (req, res) => {
 app.listen(5000, () => {
     console.log("API rodando na porta 5000");
 });
+
 
 
 
