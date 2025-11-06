@@ -4,7 +4,7 @@ import db from "../../db.js";
 export async function obterTodosProspects() {
   try {
     const prospects = await db.any(`
-      SELECT id, nome, email, telefone, created_at
+      SELECT id, nome, email, telefone, materia, created_at
       FROM prospect_clients
       ORDER BY created_at DESC
     `);
@@ -16,15 +16,15 @@ export async function obterTodosProspects() {
 }
 
 // 📨 POST - criar novo prospect
-export async function criarProspect({ nome, email, telefone }) {
+export async function criarProspect({ nome, email, telefone, materia }) {
   try {
     const novoProspect = await db.one(
       `
-      INSERT INTO prospect_clients (nome, email, telefone)
-      VALUES ($1, $2, $3)
-      RETURNING id, nome, email, telefone, created_at
+      INSERT INTO prospect_clients (nome, email, telefone, materia)
+      VALUES ($1, $2, $3, $4)
+      RETURNING id, nome, email, telefone, materia, created_at
       `,
-      [nome, email, telefone]
+      [nome, email, telefone, materia] // matéria será array
     );
 
     return novoProspect;
