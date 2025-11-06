@@ -21,7 +21,7 @@ export async function obterTodosProspects() {
 // 📨 POST - criar novo prospect
 export async function criarProspect({ nome, email, telefone, materia }) {
   try {
-    // 🔍 Verifica se o e-mail já existe
+    // Verifica se o e-mail já existe
     const existente = await db.oneOrNone(
       `SELECT id FROM prospect_clients WHERE email = $1`,
       [email]
@@ -35,29 +35,28 @@ export async function criarProspect({ nome, email, telefone, materia }) {
       };
     }
 
-    // 🔄 Garante que `materia` é um array válido
+    // Garante que materia é um array de strings
     const materiasArray = Array.isArray(materia)
       ? materia
       : typeof materia === "string"
       ? materia.split(",").map((m) => m.trim())
       : [];
 
-    // ⚙️ Converte corretamente para literal PostgreSQL {item1,item2}
-    // ❗ Sem aspas extras
+    // Se vier vazio → '{}'
+    // Se tiver valores → '{item1,item2,...}'
     const materiasSQL =
       materiasArray.length > 0
-        ? pgp.as.format("$1:raw", [
-            `{${materiasArray.map((m) => `"${m}"`).join(",")}}`,
-          ])
-        : pgp.as.format("$1:raw", ["{}"]);
+        ? `'{"${materiasArray.join('","')}"}'`
+        : `'{}'`;
 
-    // 🧩 Inserção no banco com literal real
+    // Monta a query
     const query = `
       INSERT INTO prospect_clients (nome, email, telefone, materia)
       VALUES ($1, $2, $3, ${materiasSQL}::text[])
       RETURNING id, nome, email, telefone, materia, created_at
     `;
 
+    // Executa
     const novoProspect = await db.one(query, [nome, email, telefone]);
     return novoProspect;
   } catch (error) {
